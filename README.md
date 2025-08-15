@@ -122,7 +122,7 @@ Dependencies are managed through the NetBeans project and included in the `build
 - `jakarta.persistence-api-3.1.0.jar`
 - `postgresql-42.7.7.jar` (PostgreSQL Driver)
 - `jbcrypt-0.4.jar` (Password hashing)
-- `hibernatehibernate-core-6.4.0.Final.jar`
+- `hibernate-core-6.4.0.Final.jar`
 
 ### Web Module Dependencies
 - `jakarta.servlet-api-6.0.0.jar`
