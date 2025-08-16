@@ -39,8 +39,7 @@ public class Role implements Serializable {
     @Basic(optional = false)
     @Column(name = "role_name")
     private String roleName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
-    private List<UserRole> userRoleList;
+    // User roles are managed through the UserRole entity
 
     public Role() {
     }
@@ -70,13 +69,7 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public List<UserRole> getUserRoleList() {
-        return userRoleList;
-    }
-
-    public void setUserRoleList(List<UserRole> userRoleList) {
-        this.userRoleList = userRoleList;
-    }
+    // User roles are managed through the UserRole entity
 
     @Override
     public int hashCode() {

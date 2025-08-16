@@ -55,13 +55,9 @@ public class Course implements Serializable {
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private List<Assignment> assignmentList;
     @JoinColumn(name = "instructor_id", referencedColumnName = "user_id")
     @ManyToOne
     private AppUser instructorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private List<Enrollment> enrollmentList;
 
     public Course() {
     }
@@ -116,28 +112,12 @@ public class Course implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public List<Assignment> getAssignmentList() {
-        return assignmentList;
-    }
-
-    public void setAssignmentList(List<Assignment> assignmentList) {
-        this.assignmentList = assignmentList;
-    }
-
     public AppUser getInstructorId() {
         return instructorId;
     }
 
     public void setInstructorId(AppUser instructorId) {
         this.instructorId = instructorId;
-    }
-
-    public List<Enrollment> getEnrollmentList() {
-        return enrollmentList;
-    }
-
-    public void setEnrollmentList(List<Enrollment> enrollmentList) {
-        this.enrollmentList = enrollmentList;
     }
 
     @Override

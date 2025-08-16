@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
-    <persistence-unit name="online-learning-management-system-ejbPU" transaction-type="RESOURCE_LOCAL">
-        <class>entities.AppUser</class>
-        <class>entities.Role</class>
-        <class>entities.UserRole</class>
-        <class>entities.Course</class>
-        <class>entities.Assignment</class>
-        <class>entities.Enrollment</class>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        
-        <properties>
-            <property name="jakarta.persistence.jdbc.driver" 
-                      value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" 
-                      value="jdbc:postgresql://localhost:5432/olms"/>
-            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-            <property name="jakarta.persistence.jdbc.password" value="123"/>
-            
-            <!-- Hibernate properties -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
-        </properties>
-    </persistence-unit>
+  <persistence-unit name="online-learning-management-system-ejbPU" transaction-type="RESOURCE_LOCAL">
+    <class>entities.AppUser</class>
+    <class>entities.Role</class>
+    <class>entities.UserRole</class>
+    <class>entities.Course</class>
+    <class>entities.Assignment</class>
+    <class>entities.Enrollment</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/olms"/>
+      <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+      <property name="jakarta.persistence.jdbc.password" value="123"/>
+      <!-- Hibernate properties -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+  </persistence-unit>
 </persistence>

@@ -3,107 +3,30 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Online Learning Management System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            text-align: center;
-            color: #35424a;
-            margin-bottom: 1.5rem;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-        }
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .btn-login {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: #e8491d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 1rem;
-        }
-        .btn-login:hover {
-            background-color: #d63d12;
-        }
-        .register-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .register-link a {
-            color: #e8491d;
-            text-decoration: none;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            color: #e8491d;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .error-text {
-            color: #e8491d;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-            display: block;
-        }
-        .form-group input.error {
-            border-color: #e8491d;
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
-    <div class="login-container">
+    <a href="${pageContext.request.contextPath}/HomeServlet" class="back-to-home">← Back to Home</a>
+    <div class="auth-container">
         <h2>Login to Your Account</h2>
         
         <%-- Display error message if login failed --%>
-        <% if (request.getParameter("error") != null) { %>
+        <% if (request.getAttribute("error") != null) { %>
             <div class="error-message">
-                Invalid email or password. Please try again.
+                <%= request.getAttribute("error") %>
             </div>
         <% } %>
         
         <%-- Display success message if redirected from registration --%>
-        <% if (request.getParameter("success") != null) { %>
-            <div class="success-message" style="color: #4CAF50; text-align: center; margin-bottom: 1rem;">
-                Registration successful! You can now login.
+        <% if (request.getAttribute("success") != null) { %>
+            <div class="success-message">
+                <%= request.getAttribute("success") %>
             </div>
         <% } %>
         
-        <form action="${pageContext.request.contextPath}/auth" method="POST" id="loginForm">
+        <form action="${pageContext.request.contextPath}/auth" method="POST" id="loginForm" novalidate>
             <input type="hidden" name="action" value="Login">
             <div class="form-group">
                 <label for="email">Email</label>
@@ -115,11 +38,11 @@
                 <input type="password" id="password" name="password" required>
                 <span class="error-text" id="passwordError"></span>
             </div>
-            <button type="submit" class="btn-login">Login</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
         
-        <div class="register-link">
-            Don't have an account? <a href="${pageContext.request.contextPath}/auth?action=Register">Register here</a>
+        <div class="auth-link">
+            <p>Don't have an account? <a href="${pageContext.request.contextPath}/auth?action=Register">Register here</a></p>
         </div>
     </div>
     

@@ -1,0 +1,3144 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+build.xml
+nbproject/ant-deploy.xml
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+nbproject/private/private.properties
+nbproject/private/private.xml
+nbproject/project.properties
+nbproject/project.xml
+src/conf/MANIFEST.MF
+src/conf/persistence.xml
+src/java/beans/AuthenticationSB.java
+src/java/beans/AuthenticationSBLocal.java
+src/java/entities/AppUser.java
+src/java/entities/Assignment.java
+src/java/entities/Course.java
+src/java/entities/Enrollment.java
+src/java/entities/Role.java
+src/java/entities/UserRole.java
+src/java/utils/PasswordHasher.java
+src/java/utils/ValidationResult.java
+src/java/utils/ValidationUtils.java
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="build.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="online-learning-management-system-ejb" default="default" basedir="." xmlns:ejbjarproject="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
+    <description>Builds, tests, and runs the project online-learning-management-system-ejb.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-dist:                 called before archive building
+      -post-dist:                called after archive building
+      -post-clean:               called after cleaning build products
+      -pre-run-deploy:           called before deploying
+      -post-run-deploy:          called after deploying
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of pluging an obfuscator after the compilation could look like 
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Other way how to customize the build is by overriding existing main targets.
+    The target of interest are: 
+
+      init-macrodef-javac:    defines macro for javac compilation
+      init-macrodef-debug:    defines macro for class debugging
+      do-dist:                archive building
+      run:                    execution of project 
+      javadoc-build:          javadoc generation 
+
+    Example of overriding the target for project execution could look like 
+
+        <target name="run" depends="<PROJNAME>-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that overridden target depends on jar target and not only on 
+    compile target as regular run target does. Again, for list of available 
+    properties which you can use check the target you are overriding in 
+    nbproject/build-impl.xml file. 
+
+    -->
+</project>
+</file>
+
+<file path="nbproject/ant-deploy.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project default="-deploy-ant" basedir=".">
+    <target name="-init-cl-deployment-env" if="deploy.ant.enabled">
+        <property file="${deploy.ant.properties.file}" />
+        <available file="${deploy.ant.docbase.dir}/WEB-INF/sun-web.xml" property="sun.web.present"/>
+        <available file="${deploy.ant.docbase.dir}/WEB-INF/glassfish-web.xml" property="glassfish.web.present"/>
+        <available file="${deploy.ant.resource.dir}" property="has.setup"/>
+        <tempfile prefix="pfv3" property="pfv3.password.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <echo message="AS_ADMIN_PASSWORD=${pfv3.password}" file="${pfv3.password.file}"/>
+    </target>
+
+    <target name="-parse-sun-web" depends="-init-cl-deployment-env" if="sun.web.present">
+        <tempfile prefix="pfv3" property="temp.sun.web" destdir="${java.io.tmpdir}"/>
+        <copy file="${deploy.ant.docbase.dir}/WEB-INF/sun-web.xml" tofile="${temp.sun.web}"/>
+        <!-- The doctype triggers resolution which can fail -->
+        <replace file="${temp.sun.web}">
+            <replacetoken><![CDATA[<!DOCTYPE]]></replacetoken>
+            <replacevalue><![CDATA[<!-- <!DOCTYPE]]></replacevalue>
+        </replace>
+        <replace file="${temp.sun.web}">
+            <replacetoken><![CDATA[<sun-web-app]]></replacetoken>
+            <replacevalue><![CDATA[--> <sun-web-app]]></replacevalue>
+        </replace>
+        <xmlproperty file="${temp.sun.web}" validate="false">
+        </xmlproperty>    
+        <delete file="${temp.sun.web}"/>
+        <condition property="deploy.ant.client.url" value="${pfv3.url}${sun-web-app.context-root}" else="${pfv3.url}/${ant.project.name}">
+            <isset property="sun-web-app.context-root"/>
+        </condition>
+        <condition property="deploy.context.root.argument" value="&amp;contextroot=${sun-web-app.context-root}" else="/${ant.project.name}">
+            <isset property="sun-web-app.context-root"/>
+        </condition>
+    </target>
+    <target name="-parse-glassfish-web" depends="-init-cl-deployment-env" if="glassfish.web.present">
+        <tempfile prefix="pfv3" property="temp.gf.web" destdir="${java.io.tmpdir}"/>
+        <copy file="${deploy.ant.docbase.dir}/WEB-INF/glassfish-web.xml" tofile="${temp.gf.web}"/>
+        <!-- The doctype triggers resolution which can fail -->
+        <replace file="${temp.gf.web}">
+            <replacetoken><![CDATA[<!DOCTYPE]]></replacetoken>
+            <replacevalue><![CDATA[<!-- <!DOCTYPE]]></replacevalue>
+        </replace>
+        <replace file="${temp.gf.web}">
+            <replacetoken><![CDATA[<glassfish-web-app]]></replacetoken>
+            <replacevalue><![CDATA[--> <glassfish-web-app]]></replacevalue>
+        </replace>
+        <xmlproperty file="${temp.gf.web}" validate="false">
+        </xmlproperty>
+        <delete file="${temp.gf.web}"/>
+        <condition property="deploy.ant.client.url" value="${pfv3.url}${glassfish-web-app.context-root}" else="${pfv3.url}/${ant.project.name}">
+            <isset property="glassfish-web-app.context-root"/>
+        </condition>
+        <condition property="deploy.context.root.argument" value="&amp;contextroot=${glassfish-web-app.context-root}" else="/${ant.project.name}">
+            <isset property="glassfish-web-app.context-root"/>
+        </condition>
+    </target>
+    <target name="-no-parse-sun-web" depends="-init-cl-deployment-env" unless="sun.web.present">
+        <property name="deploy.context.root.argument" value=""/>
+    </target>
+    <target name="-add-resources" depends="-init-cl-deployment-env" if="has.setup">
+        <tempfile prefix="pfv3" property="pfv3.resources.dir" destdir="${java.io.tmpdir}"/>
+        <mkdir dir="${pfv3.resources.dir}"/>
+        <mkdir dir="${pfv3.resources.dir}/META-INF"/>
+        <copy todir="${pfv3.resources.dir}/META-INF">
+            <fileset dir="${deploy.ant.resource.dir}"/>
+        </copy>
+        <jar destfile="${deploy.ant.archive}" update="true">
+            <fileset dir="${pfv3.resources.dir}"/>
+        </jar>
+        <delete dir="${pfv3.resources.dir}"/>
+    </target>
+    <target name="-deploy-ant" depends="-parse-glassfish-web, -parse-sun-web, -no-parse-sun-web,-add-resources" if="deploy.ant.enabled">
+        <antcall target="-deploy-without-pw"/>
+        <antcall target="-deploy-with-pw"/>
+    </target>
+
+    <target name="-deploy-without-pw" unless="pfv3.password">
+        <echo message="Deploying ${deploy.ant.archive}"/>
+        <tempfile prefix="pfv3" property="pfv3.results.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <property name="full.deploy.ant.archive" location="${deploy.ant.archive}"/>
+        <get src="${pfv3.admin.url}/__asadmin/deploy?path=${full.deploy.ant.archive}${deploy.context.root.argument}&amp;force=true&amp;name=${ant.project.name}"
+            dest="${pfv3.results.file}"/>
+        <delete file="${pfv3.results.file}"/>    
+    </target>
+    <target name="-deploy-with-pw" if="pfv3.password">
+        <echo message="Deploying ${deploy.ant.archive}"/>
+        <tempfile prefix="pfv3" property="pfv3.results.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <property name="full.deploy.ant.archive" location="${deploy.ant.archive}"/>
+        <get username="${pfv3.username}" password="${pfv3.password}" src="${pfv3.admin.url}/__asadmin/deploy?path=${full.deploy.ant.archive}${deploy.context.root.argument}&amp;force=true&amp;name=${ant.project.name}"
+            dest="${pfv3.results.file}"/>
+        <delete file="${pfv3.results.file}"/>
+    </target>
+    <target name="-undeploy-ant" depends="-init-cl-deployment-env" if="deploy.ant.enabled">
+        <antcall target="-undeploy-without-pw"/>
+        <antcall target="-undeploy-with-pw"/>
+    </target>
+
+    <target name="-undeploy-without-pw" unless="pfv3.password">
+        <echo message="Undeploying ${deploy.ant.archive}"/>
+        <tempfile prefix="pfv3" property="pfv3.results.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <get src="${pfv3.admin.url}/__asadmin/undeploy?name=${ant.project.name}"
+            dest="${pfv3.results.file}"/>
+        <delete file="${pfv3.results.file}"/>    
+    </target>
+    <target name="-undeploy-with-pw" if="pfv3.password">
+        <echo message="Undeploying ${deploy.ant.archive}"/>
+        <tempfile prefix="pfv3" property="pfv3.results.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <get username="${pfv3.username}" password="${pfv3.password}" src="${pfv3.admin.url}/__asadmin/undeploy?name=${ant.project.name}"
+            dest="${pfv3.results.file}"/>
+        <delete file="${pfv3.results.file}"/>
+    </target>
+</project>
+</file>
+
+<file path="nbproject/build-impl.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*** GENERATED FROM project.xml - DO NOT EDIT  ***
+***         EDIT ../build.xml INSTEAD         ***
+
+For the purpose of easier reading the script
+is divided into following sections:
+
+  - initialization
+  - compilation
+  - dist
+  - execution
+  - debugging
+  - javadoc
+  - cleanup
+
+        -->
+<project xmlns:ejbjarproject1="http://www.netbeans.org/ns/j2ee-ejbjarproject/1" xmlns:ejbjarproject2="http://www.netbeans.org/ns/j2ee-ejbjarproject/2" xmlns:ejbjarproject3="http://www.netbeans.org/ns/j2ee-ejbjarproject/3" basedir=".." default="default" name="online-learning-management-system-ejb-impl">
+    <import file="ant-deploy.xml"/>
+    <fail message="Please build using Ant 1.7.1 or higher.">
+        <condition>
+            <not>
+                <antversion atleast="1.7.1"/>
+            </not>
+        </condition>
+    </fail>
+    <target depends="dist,javadoc" description="Build whole project." name="default"/>
+    <!-- 
+                INITIALIZATION SECTION 
+            -->
+    <target name="-pre-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="-pre-init" name="-init-private">
+        <property file="nbproject/private/private.properties"/>
+    </target>
+    <target depends="-pre-init,-init-private" name="-init-userdir">
+        <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
+    </target>
+    <target depends="-pre-init,-init-private,-init-userdir" name="-init-user">
+        <property file="${user.properties.file}"/>
+        <!-- The two properties below are usually overridden -->
+        <!-- by the active platform. Just a fallback. -->
+        <property name="default.javac.source" value="1.4"/>
+        <property name="default.javac.target" value="1.4"/>
+    </target>
+    <target depends="-pre-init,-init-private,-init-userdir,-init-user" name="-init-project">
+        <property file="nbproject/project.properties"/>
+    </target>
+    <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-init-macrodef-property" name="-do-init">
+        <ejbjarproject1:property name="platform.home" value="platforms.${platform.active}.home"/>
+        <ejbjarproject1:property name="platform.bootcp" value="platforms.${platform.active}.bootclasspath"/>
+        <ejbjarproject1:property name="platform.compiler" value="platforms.${platform.active}.compile"/>
+        <ejbjarproject1:property name="platform.javac.tmp" value="platforms.${platform.active}.javac"/>
+        <condition property="platform.javac" value="${platform.home}/bin/javac">
+            <equals arg1="${platform.javac.tmp}" arg2="$${platforms.${platform.active}.javac}"/>
+        </condition>
+        <property name="platform.javac" value="${platform.javac.tmp}"/>
+        <ejbjarproject1:property name="platform.java.tmp" value="platforms.${platform.active}.java"/>
+        <condition property="platform.java" value="${platform.home}/bin/java">
+            <equals arg1="${platform.java.tmp}" arg2="$${platforms.${platform.active}.java}"/>
+        </condition>
+        <property name="platform.java" value="${platform.java.tmp}"/>
+        <ejbjarproject1:property name="platform.javadoc.tmp" value="platforms.${platform.active}.javadoc"/>
+        <condition property="platform.javadoc" value="${platform.home}/bin/javadoc">
+            <equals arg1="${platform.javadoc.tmp}" arg2="$${platforms.${platform.active}.javadoc}"/>
+        </condition>
+        <property name="platform.javadoc" value="${platform.javadoc.tmp}"/>
+        <condition property="platform.invalid" value="true">
+            <or>
+                <contains string="${platform.javac}" substring="$${platforms."/>
+                <contains string="${platform.java}" substring="$${platforms."/>
+                <contains string="${platform.javadoc}" substring="$${platforms."/>
+            </or>
+        </condition>
+        <fail unless="platform.home">Must set platform.home</fail>
+        <fail unless="platform.bootcp">Must set platform.bootcp</fail>
+        <fail unless="platform.java">Must set platform.java</fail>
+        <fail unless="platform.javac">Must set platform.javac</fail>
+        <fail if="platform.invalid">
+ The J2SE Platform is not correctly set up.
+ Your active platform is: ${platform.active}, but the corresponding property "platforms.${platform.active}.home" is not found in the project's properties files. 
+ Either open the project in the IDE and setup the Platform with the same name or add it manually.
+ For example like this:
+     ant -Duser.properties.file=&lt;path_to_property_file&gt; jar (where you put the property "platforms.${platform.active}.home" in a .properties file)
+  or ant -Dplatforms.${platform.active}.home=&lt;path_to_JDK_home&gt; jar (where no properties file is used) 
+  </fail>
+        <!-- Ensure configuration directory exists. -->
+        <mkdir dir="${meta.inf}"/>
+        <property name="runmain.jvmargs" value=""/>
+        <condition property="have.tests">
+            <or>
+                <available file="${test.src.dir}"/>
+            </or>
+        </condition>
+        <condition property="have.sources">
+            <or>
+                <available file="${src.dir}"/>
+            </or>
+        </condition>
+        <condition property="netbeans.home+have.tests">
+            <and>
+                <isset property="netbeans.home"/>
+                <isset property="have.tests"/>
+            </and>
+        </condition>
+        <condition property="no.javadoc.preview">
+            <isfalse value="${javadoc.preview}"/>
+        </condition>
+        <available file="${meta.inf}/MANIFEST.MF" property="has.custom.manifest"/>
+        <!--
+                    Variables needed to support directory deployment.
+                -->
+        <condition property="do.package.with.custom.manifest.not.directory.deploy">
+            <and>
+                <isset property="has.custom.manifest"/>
+                <isfalse value="${directory.deployment.supported}"/>
+            </and>
+        </condition>
+        <condition property="do.package.without.custom.manifest.not.directory.deploy">
+            <and>
+                <not>
+                    <isset property="has.custom.manifest"/>
+                </not>
+                <isfalse value="${directory.deployment.supported}"/>
+            </and>
+        </condition>
+        <!--End Variables needed to support directory deployment.-->
+        <condition property="classes.dir" value="${build.ear.classes.dir}">
+            <isset property="dist.ear.dir"/>
+        </condition>
+        <property name="classes.dir" value="${build.classes.dir}"/>
+        <condition property="no.deps">
+            <and>
+                <istrue value="${no.dependencies}"/>
+            </and>
+        </condition>
+        <condition property="no.dist.ear.dir">
+            <not>
+                <isset property="dist.ear.dir"/>
+            </not>
+        </condition>
+        <property name="source.encoding" value="${file.encoding}"/>
+        <condition property="javadoc.encoding.used" value="${javadoc.encoding}">
+            <and>
+                <isset property="javadoc.encoding"/>
+                <not>
+                    <equals arg1="${javadoc.encoding}" arg2=""/>
+                </not>
+            </and>
+        </condition>
+        <property name="javadoc.encoding.used" value="${source.encoding}"/>
+        <property name="includes" value="**"/>
+        <property name="excludes" value=""/>
+        <path id="endorsed.classpath.path" path="${endorsed.classpath}"/>
+        <condition else="" property="endorsed.classpath.cmd.line.arg" value="-Xbootclasspath/p:'${toString:endorsed.classpath.path}'">
+            <and>
+                <isset property="endorsed.classpath"/>
+                <length length="0" string="${endorsed.classpath}" when="greater"/>
+            </and>
+        </condition>
+        <condition property="is.server.weblogic" value="true">
+            <equals arg1="${j2ee.server.type}" arg2="WebLogic9"/>
+        </condition>
+        <condition property="is.jars.in.ejbjar" value="true">
+            <equals arg1="${jars.in.ejbjar}" arg2="true"/>
+        </condition>
+        <condition else="false" property="jdkBug6558476">
+            <and>
+                <matches pattern="1\.[56]" string="${java.specification.version}"/>
+                <not>
+                    <os family="unix"/>
+                </not>
+            </and>
+        </condition>
+        <property name="javac.fork" value="${jdkBug6558476}"/>
+        <condition property="junit.available">
+            <or>
+                <available classname="org.junit.Test" classpath="${run.test.classpath}"/>
+                <available classname="junit.framework.Test" classpath="${run.test.classpath}"/>
+            </or>
+        </condition>
+        <condition property="testng.available">
+            <available classname="org.testng.annotations.Test" classpath="${run.test.classpath}"/>
+        </condition>
+        <condition property="junit+testng.available">
+            <and>
+                <istrue value="${junit.available}"/>
+                <istrue value="${testng.available}"/>
+            </and>
+        </condition>
+        <condition else="testng" property="testng.mode" value="mixed">
+            <istrue value="${junit+testng.available}"/>
+        </condition>
+        <condition else="" property="testng.debug.mode" value="-mixed">
+            <istrue value="${junit+testng.available}"/>
+        </condition>
+    </target>
+    <target depends="init" name="-init-cos" unless="deploy.on.save">
+        <condition property="deploy.on.save" value="true">
+            <or>
+                <istrue value="${j2ee.deploy.on.save}"/>
+                <istrue value="${j2ee.compile.on.save}"/>
+            </or>
+        </condition>
+    </target>
+    <target name="-post-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-do-init" name="-init-check">
+        <fail unless="src.dir">Must set src.dir</fail>
+        <fail unless="test.src.dir">Must set test.src.dir</fail>
+        <fail unless="build.dir">Must set build.dir</fail>
+        <fail unless="build.generated.dir">Must set build.generated.dir</fail>
+        <fail unless="dist.dir">Must set dist.dir</fail>
+        <fail unless="build.classes.dir">Must set build.classes.dir</fail>
+        <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
+        <fail unless="build.classes.excludes">Must set build.classes.excludes</fail>
+        <fail unless="dist.jar">Must set dist.jar</fail>
+        <condition property="missing.j2ee.server.home">
+            <and>
+                <matches pattern="j2ee.server.home" string="${j2ee.platform.classpath}"/>
+                <not>
+                    <isset property="j2ee.server.home"/>
+                </not>
+            </and>
+        </condition>
+        <fail if="missing.j2ee.server.home">
+The Java EE server classpath is not correctly set up - server home directory is missing.
+Either open the project in the IDE and assign the server or setup the server classpath manually.
+For example like this:
+   ant -Dj2ee.server.home=&lt;app_server_installation_directory&gt;
+                </fail>
+        <fail unless="j2ee.platform.classpath">
+The Java EE server classpath is not correctly set up. Your active server type is ${j2ee.server.type}.
+Either open the project in the IDE and assign the server or setup the server classpath manually.
+For example like this:
+   ant -Duser.properties.file=&lt;path_to_property_file&gt; (where you put the property "j2ee.platform.classpath" in a .properties file)
+or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties file is used)
+                </fail>
+    </target>
+    <target name="-init-macrodef-property">
+        <macrodef name="property" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+            <attribute name="name"/>
+            <attribute name="value"/>
+            <sequential>
+                <property name="@{name}" value="${@{value}}"/>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-ap-cmdline-properties" if="ap.supported.internal" name="-init-macrodef-javac-with-processors">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}:${j2ee.platform.classpath}" name="classpath"/>
+            <attribute default="${javac.processorpath}" name="processorpath"/>
+            <attribute default="${build.generated.sources.dir}/ap-source-output" name="apgeneratedsrcdir"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${javac.debug}" name="debug"/>
+            <attribute default="${empty.dir}" name="gensrcdir"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property name="javac.compilerargs" value=""/>
+                <property location="${build.dir}/empty" name="empty.dir"/>
+                <mkdir dir="${empty.dir}"/>
+                <mkdir dir="@{apgeneratedsrcdir}"/>
+                <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" executable="${platform.javac}" fork="${javac.fork}" includeantruntime="false" includes="@{includes}" source="${javac.source}" srcdir="@{srcdir}" target="${javac.target}">
+                    <src>
+                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
+                            <include name="*"/>
+                        </dirset>
+                    </src>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <compilerarg line="${javac.compilerargs}"/>
+                    <compilerarg value="-processorpath"/>
+                    <compilerarg path="@{processorpath}:${empty.dir}"/>
+                    <compilerarg line="${ap.processors.internal}"/>
+                    <compilerarg value="-s"/>
+                    <compilerarg path="@{apgeneratedsrcdir}"/>
+                    <compilerarg line="${ap.proc.none.internal}"/>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-ap-cmdline-properties" name="-init-macrodef-javac-without-processors" unless="ap.supported.internal">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}:${j2ee.platform.classpath}" name="classpath"/>
+            <attribute default="${javac.processorpath}" name="processorpath"/>
+            <attribute default="${build.generated.sources.dir}/ap-source-output" name="apgeneratedsrcdir"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${javac.debug}" name="debug"/>
+            <attribute default="${empty.dir}" name="gensrcdir"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property name="javac.compilerargs" value=""/>
+                <property location="${build.dir}/empty" name="empty.dir"/>
+                <mkdir dir="${empty.dir}"/>
+                <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" executable="${platform.javac}" fork="yes" includeantruntime="false" includes="@{includes}" source="${javac.source}" srcdir="@{srcdir}" target="${javac.target}">
+                    <src>
+                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
+                            <include name="*"/>
+                        </dirset>
+                    </src>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <compilerarg line="${javac.compilerargs}"/>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-javac-with-processors,-init-macrodef-javac-without-processors" name="-init-macrodef-javac">
+        <macrodef name="depend" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}:${j2ee.platform.classpath}" name="classpath"/>
+            <sequential>
+                <depend cache="${build.dir}/depcache" destdir="@{destdir}" excludes="${excludes}" includes="${includes}" srcdir="@{srcdir}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                </depend>
+            </sequential>
+        </macrodef>
+        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <sequential>
+                <fail unless="javac.includes">Must set javac.includes</fail>
+                <pathconvert pathsep="${line.separator}" property="javac.includes.binary">
+                    <path>
+                        <filelist dir="@{destdir}" files="${javac.includes}"/>
+                    </path>
+                    <globmapper from="*.java" to="*.class"/>
+                </pathconvert>
+                <tempfile deleteonexit="true" property="javac.includesfile.binary"/>
+                <echo file="${javac.includesfile.binary}" message="${javac.includes.binary}"/>
+                <delete>
+                    <files includesfile="${javac.includesfile.binary}"/>
+                </delete>
+                <delete file="${javac.includesfile.binary}"/>
+            </sequential>
+        </macrodef>
+    </target>
+    <target if="${junit.available}" name="-init-macrodef-junit-init">
+        <condition else="false" property="nb.junit.batch" value="true">
+            <and>
+                <istrue value="${junit.available}"/>
+                <not>
+                    <isset property="test.method"/>
+                </not>
+            </and>
+        </condition>
+        <condition else="false" property="nb.junit.single" value="true">
+            <and>
+                <istrue value="${junit.available}"/>
+                <isset property="test.method"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-init-test-properties">
+        <property name="test.binaryincludes" value="&lt;nothing&gt;"/>
+        <property name="test.binarytestincludes" value=""/>
+        <property name="test.binaryexcludes" value=""/>
+    </target>
+    <target if="${nb.junit.single}" name="-init-macrodef-junit-single" unless="${nb.junit.batch}">
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" jvm="${platform.java}" showoutput="true" tempdir="${java.io.tmpdir}">
+                    <test methods="@{testmethods}" name="@{testincludes}" todir="${build.test.results.dir}"/>
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg value="-ea"/>
+                    <customize/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-test-properties" if="${nb.junit.batch}" name="-init-macrodef-junit-batch" unless="${nb.junit.single}">
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property name="run.jvmargs.ide" value=""/>
+                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" jvm="${platform.java}" showoutput="true" tempdir="${build.dir}">
+                    <batchtest todir="${build.test.results.dir}">
+                        <fileset dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
+                            <filename name="@{testincludes}"/>
+                        </fileset>
+                        <fileset dir="${build.test.classes.dir}" excludes="@{excludes},${excludes},${test.binaryexcludes}" includes="${test.binaryincludes}">
+                            <filename name="${test.binarytestincludes}"/>
+                        </fileset>
+                    </batchtest>
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs.ide}"/>
+                    <customize/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-junit-init,-init-macrodef-junit-single, -init-macrodef-junit-batch" if="${junit.available}" name="-init-macrodef-junit"/>
+    <target if="${testng.available}" name="-init-macrodef-testng">
+        <macrodef name="testng" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <condition else="" property="testng.methods.arg" value="@{testincludes}.@{testmethods}">
+                    <isset property="test.method"/>
+                </condition>
+                <union id="test.set">
+                    <fileset dir="${test.src.dir}" excludes="@{excludes},**/*.xml,${excludes}" includes="@{includes}">
+                        <filename name="@{testincludes}"/>
+                    </fileset>
+                </union>
+                <taskdef classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}" name="testng"/>
+                <testng classfilesetref="test.set" failureProperty="tests.failed" jvm="${platform.java}" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="online-learning-management-system-ejb" testname="TestNG tests" workingDir="${basedir}">
+                    <xmlfileset dir="${build.test.classes.dir}" includes="@{testincludes}"/>
+                    <propertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </propertyset>
+                    <customize/>
+                </testng>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="-init-macrodef-test-impl">
+        <macrodef name="test-impl" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element implicit="true" name="customize" optional="true"/>
+            <sequential>
+                <echo>No tests executed.</echo>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-junit" if="${junit.available}" name="-init-macrodef-junit-impl">
+        <macrodef name="test-impl" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element implicit="true" name="customize" optional="true"/>
+            <sequential>
+                <ejbjarproject2:junit excludes="@{excludes}" includes="@{includes}" testincludes="@{testincludes}" testmethods="@{testmethods}">
+                    <customize/>
+                </ejbjarproject2:junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-testng" if="${testng.available}" name="-init-macrodef-testng-impl">
+        <macrodef name="test-impl" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element implicit="true" name="customize" optional="true"/>
+            <sequential>
+                <ejbjarproject2:testng excludes="@{excludes}" includes="@{includes}" testincludes="@{testincludes}" testmethods="@{testmethods}">
+                    <customize/>
+                </ejbjarproject2:testng>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-test-impl,-init-macrodef-junit-impl,-init-macrodef-testng-impl" name="-init-macrodef-test">
+        <macrodef name="test" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <sequential>
+                <ejbjarproject2:test-impl excludes="@{excludes}" includes="@{includes}" testincludes="@{testincludes}" testmethods="@{testmethods}">
+                    <customize>
+                        <classpath>
+                            <path path="${run.test.classpath}"/>
+                            <path path="${j2ee.platform.classpath}"/>
+                            <path path="${j2ee.platform.embeddableejb.classpath}"/>
+                        </classpath>
+                        <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                        <jvmarg line="${runmain.jvmargs}"/>
+                    </customize>
+                </ejbjarproject2:test-impl>
+            </sequential>
+        </macrodef>
+    </target>
+    <target if="${junit.available}" name="-init-macrodef-junit-debug" unless="${nb.junit.batch}">
+        <macrodef name="junit-debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" jvm="${platform.java}" showoutput="true" tempdir="${java.io.tmpdir}">
+                    <test methods="@{testmethods}" name="@{testincludes}" todir="${build.test.results.dir}"/>
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+                    <customize/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-test-properties" if="${nb.junit.batch}" name="-init-macrodef-junit-debug-batch">
+        <macrodef name="junit-debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property name="run.jvmargs.ide" value=""/>
+                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" jvm="${platform.java}" showoutput="true" tempdir="${build.dir}">
+                    <batchtest todir="${build.test.results.dir}">
+                        <fileset dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
+                            <filename name="@{testincludes}"/>
+                        </fileset>
+                        <fileset dir="${build.test.classes.dir}" excludes="@{excludes},${excludes},${test.binaryexcludes}" includes="${test.binaryincludes}">
+                            <filename name="${test.binarytestincludes}"/>
+                        </fileset>
+                    </batchtest>
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs.ide}"/>
+                    <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+                    <customize/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-junit-debug,-init-macrodef-junit-debug-batch" if="${junit.available}" name="-init-macrodef-junit-debug-impl">
+        <macrodef name="test-debug-impl" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <element implicit="true" name="customize" optional="true"/>
+            <sequential>
+                <ejbjarproject2:junit-debug excludes="@{excludes}" includes="@{includes}" testincludes="@{testincludes}" testmethods="@{testmethods}">
+                    <customize/>
+                </ejbjarproject2:junit-debug>
+            </sequential>
+        </macrodef>
+    </target>
+    <target if="${testng.available}" name="-init-macrodef-testng-debug">
+        <macrodef name="testng-debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${main.class}" name="testClass"/>
+            <attribute default="" name="testMethod"/>
+            <element name="customize2" optional="true"/>
+            <sequential>
+                <condition else="-testclass @{testClass}" property="test.class.or.method" value="-methods @{testClass}.@{testMethod}">
+                    <isset property="test.method"/>
+                </condition>
+                <condition else="-suitename online-learning-management-system-ejb -testname @{testClass} ${test.class.or.method}" property="testng.cmd.args" value="@{testClass}">
+                    <matches pattern=".*\.xml" string="@{testClass}"/>
+                </condition>
+                <delete dir="${build.test.results.dir}" quiet="true"/>
+                <mkdir dir="${build.test.results.dir}"/>
+                <ejbjarproject1:debug args="${testng.cmd.args}" classname="org.testng.TestNG" classpath="${debug.test.classpath}:${j2ee.platform.embeddableejb.classpath}">
+                    <customize>
+                        <customize2/>
+                        <jvmarg value="-ea"/>
+                        <arg line="${testng.debug.mode}"/>
+                        <arg line="-d ${build.test.results.dir}"/>
+                        <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                    </customize>
+                </ejbjarproject1:debug>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-testng-debug" if="${testng.available}" name="-init-macrodef-testng-debug-impl">
+        <macrodef name="testng-debug-impl" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${main.class}" name="testClass"/>
+            <attribute default="" name="testMethod"/>
+            <element implicit="true" name="customize2" optional="true"/>
+            <sequential>
+                <ejbjarproject2:testng-debug testClass="@{testClass}" testMethod="@{testMethod}">
+                    <customize2/>
+                </ejbjarproject2:testng-debug>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-junit-debug-impl" if="${junit.available}" name="-init-macrodef-test-debug-junit">
+        <macrodef name="test-debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <attribute default="${main.class}" name="testClass"/>
+            <attribute default="" name="testMethod"/>
+            <sequential>
+                <ejbjarproject2:test-debug-impl excludes="@{excludes}" includes="@{includes}" testincludes="@{testincludes}" testmethods="@{testmethods}">
+                    <customize>
+                        <classpath>
+                            <path path="${run.test.classpath}"/>
+                            <path path="${j2ee.platform.classpath}"/>
+                            <path path="${j2ee.platform.embeddableejb.classpath}"/>
+                        </classpath>
+                        <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                        <jvmarg line="${runmain.jvmargs}"/>
+                    </customize>
+                </ejbjarproject2:test-debug-impl>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-testng-debug-impl" if="${testng.available}" name="-init-macrodef-test-debug-testng">
+        <macrodef name="test-debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <attribute default="" name="testmethods"/>
+            <attribute default="${main.class}" name="testClass"/>
+            <attribute default="" name="testMethod"/>
+            <sequential>
+                <ejbjarproject2:testng-debug-impl testClass="@{testClass}" testMethod="@{testMethod}">
+                    <customize2>
+                        <syspropertyset>
+                            <propertyref prefix="test-sys-prop."/>
+                            <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                        </syspropertyset>
+                    </customize2>
+                </ejbjarproject2:testng-debug-impl>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-test-debug-junit,-init-macrodef-test-debug-testng" name="-init-macrodef-test-debug"/>
+    <target name="-init-macrodef-java">
+        <macrodef name="java" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
+            <attribute default="${main.class}" name="classname"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java classname="@{classname}" fork="true" jvm="${platform.java}">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <jvmarg line="${runmain.jvmargs}"/>
+                    <classpath>
+                        <path path="${build.classes.dir}:${javac.classpath}:${j2ee.platform.classpath}"/>
+                    </classpath>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-debug-args" name="-init-macrodef-nbjpda">
+        <macrodef name="nbjpdastart" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+            <attribute default="${main.class}" name="name"/>
+            <attribute default="${debug.classpath}" name="classpath"/>
+            <sequential>
+                <nbjpdastart addressproperty="jpda.address" name="@{name}" transport="${debug-transport}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <bootclasspath>
+                        <path path="${platform.bootcp}"/>
+                    </bootclasspath>
+                </nbjpdastart>
+            </sequential>
+        </macrodef>
+        <macrodef name="nbjpdareload" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+            <attribute default="${build.classes.dir}" name="dir"/>
+            <sequential>
+                <nbjpdareload>
+                    <fileset dir="@{dir}" includes="${fix.classes}">
+                        <include name="${fix.includes}*.class"/>
+                    </fileset>
+                </nbjpdareload>
+            </sequential>
+        </macrodef>
+        <macrodef name="nbjpdaappreloaded" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+            <sequential>
+                <nbjpdaappreloaded/>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="-init-debug-args">
+        <condition else="dt_socket" property="debug-transport-by-os" value="dt_shmem">
+            <os family="windows"/>
+        </condition>
+        <condition else="${debug-transport-by-os}" property="debug-transport" value="${debug.transport}">
+            <isset property="debug.transport"/>
+        </condition>
+    </target>
+    <target depends="-init-debug-args" name="-init-macrodef-debug">
+        <macrodef name="debug" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+            <attribute default="${main.class}" name="classname"/>
+            <attribute default="${debug.classpath}" name="classpath"/>
+            <attribute default="${application.args}" name="args"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java classname="@{classname}" fork="true" jvm="${platform.java}">
+                    <bootclasspath>
+                        <path path="${platform.bootcp}"/>
+                    </bootclasspath>
+                    <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg line="${runmain.jvmargs}"/>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <arg line="@{args}"/>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="-init-taskdefs">
+        <fail unless="libs.CopyLibs.classpath">
+The libs.CopyLibs.classpath property is not set up.
+This property must point to 
+org-netbeans-modules-java-j2seproject-copylibstask.jar file which is part
+of NetBeans IDE installation and is usually located at 
+&lt;netbeans_installation&gt;/java&lt;version&gt;/ant/extra folder.
+Either open the project in the IDE and make sure CopyLibs library
+exists or setup the property manually. For example like this:
+ ant -Dlibs.CopyLibs.classpath=a/path/to/org-netbeans-modules-java-j2seproject-copylibstask.jar
+                </fail>
+        <taskdef classpath="${libs.CopyLibs.classpath}" resource="org/netbeans/modules/java/j2seproject/copylibstask/antlib.xml"/>
+    </target>
+    <target name="-init-ap-cmdline-properties">
+        <property name="annotation.processing.enabled" value="true"/>
+        <property name="annotation.processing.processors.list" value=""/>
+        <property name="annotation.processing.run.all.processors" value="true"/>
+        <property name="javac.processorpath" value="${javac.classpath}"/>
+        <property name="javac.test.processorpath" value="${javac.test.classpath}"/>
+        <condition property="ap.supported.internal" value="true">
+            <not>
+                <matches pattern="1\.[0-5](\..*)?" string="${javac.source}"/>
+            </not>
+        </condition>
+    </target>
+    <target depends="-init-ap-cmdline-properties" if="ap.supported.internal" name="-init-ap-cmdline-supported">
+        <condition else="" property="ap.processors.internal" value="-processor ${annotation.processing.processors.list}">
+            <isfalse value="${annotation.processing.run.all.processors}"/>
+        </condition>
+        <condition else="" property="ap.proc.none.internal" value="-proc:none">
+            <isfalse value="${annotation.processing.enabled}"/>
+        </condition>
+    </target>
+    <target depends="-init-ap-cmdline-properties,-init-ap-cmdline-supported" name="-init-ap-cmdline">
+        <property name="ap.cmd.line.internal" value=""/>
+    </target>
+    <!--
+                pre NB7.2 profiling section; consider it deprecated
+            -->
+    <target depends="-profile-pre-init, init, -profile-post-init, -profile-init-check" if="profiler.info.jvmargs.agent" name="profile-init"/>
+    <target if="profiler.info.jvmargs.agent" name="-profile-pre-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target if="profiler.info.jvmargs.agent" name="-profile-post-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="-profile-pre-init, init, -profile-post-init" if="profiler.info.jvmargs.agent" name="-profile-init-check">
+        <fail unless="profiler.info.jvm">Must set JVM to use for profiling in profiler.info.jvm</fail>
+        <fail unless="profiler.info.jvmargs.agent">Must set profiler agent JVM arguments in profiler.info.jvmargs.agent</fail>
+    </target>
+    <!--
+                end of pre NB7.2 profiling section
+            -->
+    <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-do-init,-post-init,-init-check,-init-macrodef-property,-init-macrodef-javac,-init-macrodef-test,-init-macrodef-test-debug,-init-macrodef-java,-init-macrodef-nbjpda,-init-macrodef-debug,-init-taskdefs,-init-ap-cmdline" name="init"/>
+    <!--
+                COMPILATION SECTION
+            -->
+    <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps"/>
+    <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps"/>
+    <target depends="init, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
+    <target depends="init,deps-jar" name="-pre-pre-compile">
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.ear.classes.dir}"/>
+    </target>
+    <target name="-pre-compile">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
+    <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
+        <copyfiles files="${file.reference.jakarta.ejb-api-4.0.1.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jakarta.persistence-api-3.1.0.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jakarta.transaction-api-2.0.1.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.postgresql-42.7.7.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jbcrypt-0.4.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.hibernate-core-6.4.0.Final.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.hibernate-validator-8.0.1.Final.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jakarta.el-api-5.0.1.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jakarta.validation-api-3.0.1.jar}" todir="${build.classes.dir}"/>
+    </target>
+    <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
+        <basename file="${file.reference.jakarta.ejb-api-4.0.1.jar}" property="manifest.file.reference.jakarta.ejb-api-4.0.1.jar"/>
+        <basename file="${file.reference.jakarta.persistence-api-3.1.0.jar}" property="manifest.file.reference.jakarta.persistence-api-3.1.0.jar"/>
+        <basename file="${file.reference.jakarta.transaction-api-2.0.1.jar}" property="manifest.file.reference.jakarta.transaction-api-2.0.1.jar"/>
+        <basename file="${file.reference.postgresql-42.7.7.jar}" property="manifest.file.reference.postgresql-42.7.7.jar"/>
+        <basename file="${file.reference.jbcrypt-0.4.jar}" property="manifest.file.reference.jbcrypt-0.4.jar"/>
+        <basename file="${file.reference.hibernate-core-6.4.0.Final.jar}" property="manifest.file.reference.hibernate-core-6.4.0.Final.jar"/>
+        <basename file="${file.reference.hibernate-validator-8.0.1.Final.jar}" property="manifest.file.reference.hibernate-validator-8.0.1.Final.jar"/>
+        <basename file="${file.reference.jakarta.el-api-5.0.1.jar}" property="manifest.file.reference.jakarta.el-api-5.0.1.jar"/>
+        <basename file="${file.reference.jakarta.validation-api-3.0.1.jar}" property="manifest.file.reference.jakarta.validation-api-3.0.1.jar"/>
+        <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
+            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 jar-7 jar-8 jar-9 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.jakarta.ejb-api-4.0.1.jar}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.file.reference.jakarta.persistence-api-3.1.0.jar}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.file.reference.jakarta.transaction-api-2.0.1.jar}"/>
+            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.postgresql-42.7.7.jar}"/>
+            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.jbcrypt-0.4.jar}"/>
+            <attribute name="jar-6-Extension-Name" value="${manifest.file.reference.hibernate-core-6.4.0.Final.jar}"/>
+            <attribute name="jar-7-Extension-Name" value="${manifest.file.reference.hibernate-validator-8.0.1.Final.jar}"/>
+            <attribute name="jar-8-Extension-Name" value="${manifest.file.reference.jakarta.el-api-5.0.1.jar}"/>
+            <attribute name="jar-9-Extension-Name" value="${manifest.file.reference.jakarta.validation-api-3.0.1.jar}"/>
+        </manifest>
+    </target>
+    <target depends="compile" name="library-inclusion-in-manifest">
+        <copyfiles files="${file.reference.jakarta.ejb-api-4.0.1.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jakarta.persistence-api-3.1.0.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jakarta.transaction-api-2.0.1.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.postgresql-42.7.7.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jbcrypt-0.4.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.hibernate-core-6.4.0.Final.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.hibernate-validator-8.0.1.Final.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jakarta.el-api-5.0.1.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jakarta.validation-api-3.0.1.jar}" todir="${dist.ear.dir}/lib"/>
+        <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
+    </target>
+    <target name="-copy-meta-inf">
+        <copy todir="${classes.dir}">
+            <fileset dir="${meta.inf}" includes="**/*.dbschema"/>
+        </copy>
+        <copy todir="${classes.dir}/META-INF">
+            <fileset dir="${meta.inf}" excludes="**/*.dbschema **/xml-resources/** ${meta.inf.excludes}"/>
+        </copy>
+    </target>
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-copy-meta-inf" if="have.sources" name="-do-compile">
+        <ejbjarproject2:javac destdir="${classes.dir}" gensrcdir="${build.generated.sources.dir}"/>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+        </copy>
+    </target>
+    <target name="-post-compile">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" description="Compile project." name="compile"/>
+    <target name="-pre-compile-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,deps-jar,-pre-pre-compile" name="-do-compile-single">
+        <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
+        <ejbjarproject2:javac excludes="" gensrcdir="${build.generated.sources.dir}" includes="${javac.includes}"/>
+    </target>
+    <target name="-post-compile-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile-single,-do-compile-single,-post-compile-single" name="compile-single"/>
+    <!--
+                DIST BUILDING SECTION
+            -->
+    <target name="-pre-dist">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive" if="has.custom.manifest" name="-do-dist-with-manifest">
+        <dirname file="${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.jar}" manifest="${build.classes.dir}/META-INF/MANIFEST.MF">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+    </target>
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive" name="-do-dist-without-manifest" unless="has.custom.manifest">
+        <dirname file="${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.jar}">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+    </target>
+    <!--
+                TARGETS NEEDED TO SUPPORT DIRECTORY DEPLOYMENT
+            -->
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive" if="do.package.with.custom.manifest.not.directory.deploy" name="-do-tmp-dist-with-manifest">
+        <dirname file="${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.jar}" manifest="${build.classes.dir}/META-INF/MANIFEST.MF">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+    </target>
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive" if="do.package.without.custom.manifest.not.directory.deploy" name="-do-tmp-dist-without-manifest">
+        <dirname file="${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.jar}">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+    </target>
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive, -do-tmp-dist-without-manifest, -do-tmp-dist-with-manifest" name="-do-dist-directory-deploy"/>
+    <target depends="init,compile,-pre-dist,-do-dist-directory-deploy,-post-dist" description="Build distribution (JAR) - if directory deployment is not supported." name="dist-directory-deploy"/>
+    <!--
+                END TARGETS NEEDED TO SUPPORT DIRECTORY DEPLOYMENT
+            -->
+    <target depends="init,compile,-pre-dist,library-inclusion-in-archive, -do-dist-without-manifest, -do-dist-with-manifest" name="-do-dist"/>
+    <target depends="init,compile,-pre-dist,library-inclusion-in-manifest" name="-do-ear-dist">
+        <dirname file="${dist.ear.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.ear.jar}" manifest="${build.ear.classes.dir}/META-INF/MANIFEST.MF">
+            <fileset dir="${build.ear.classes.dir}"/>
+        </jar>
+    </target>
+    <target name="-post-dist">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-dist,-do-dist,-post-dist" description="Build distribution (JAR)." name="dist"/>
+    <target depends="init,-init-cos,compile,-pre-dist,-do-ear-dist,-post-dist" description="Build distribution (JAR) to be packaged into an EAR." name="dist-ear"/>
+    <!--
+                EXECUTION SECTION
+            -->
+    <target depends="run-deploy" description="Deploy to server." name="run"/>
+    <target name="-init-deploy">
+        <property name="include.jar.manifest" value=""/>
+    </target>
+    <target name="pre-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="post-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="-pre-nbmodule-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- This target can be overriden by NetBeans modules. Don't override it directly, use -pre-run-deploy task instead. -->
+    </target>
+    <target name="-post-nbmodule-run-deploy">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- This target can be overriden by NetBeans modules. Don't override it directly, use -post-run-deploy task instead. -->
+    </target>
+    <target name="-run-deploy-am">
+        <!-- Task to deploy to the Access Manager runtime. -->
+    </target>
+    <target depends="init,-init-cos,-init-deploy,compile,library-inclusion-in-archive,dist-directory-deploy,pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,post-run-deploy,-do-update-breakpoints" name="run-deploy"/>
+    <target if="netbeans.home" name="-run-deploy-nb">
+        <nbdeploy debugmode="false" forceRedeploy="${forceRedeploy}"/>
+    </target>
+    <target name="-init-deploy-ant" unless="netbeans.home">
+        <property name="deploy.ant.archive" value="${dist.jar}"/>
+        <property name="deploy.ant.resource.dir" value="${resource.dir}"/>
+        <property name="deploy.ant.enabled" value="true"/>
+    </target>
+    <target depends="dist,-run-undeploy-nb,-init-deploy-ant,-undeploy-ant" name="run-undeploy"/>
+    <target if="netbeans.home" name="-run-undeploy-nb">
+        <fail message="Undeploy is not supported from within the IDE"/>
+    </target>
+    <target depends="dist" name="verify">
+        <nbverify file="${dist.jar}"/>
+    </target>
+    <target depends="init,compile-single" name="run-main">
+        <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
+        <ejbjarproject3:java classname="${run.class}"/>
+    </target>
+    <target depends="init" if="netbeans.home" name="-do-update-breakpoints">
+        <ejbjarproject1:nbjpdaappreloaded/>
+    </target>
+    <!--
+                DEBUGGING SECTION
+            -->
+    <target depends="init,compile,dist-directory-deploy" description="Debug project in IDE." if="netbeans.home" name="debug">
+        <nbdeploy debugmode="true"/>
+        <antcall target="connect-debugger"/>
+    </target>
+    <target name="connect-debugger" unless="is.debugged">
+        <condition property="listeningcp" value="sourcepath">
+            <istrue value="${j2ee.compile.on.save}"/>
+        </condition>
+        <nbjpdaconnect address="${jpda.address}" host="${jpda.host}" listeningcp="${listeningcp}" name="${name}" transport="${jpda.transport}">
+            <classpath>
+                <path path="${debug.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <path path="${web.docbase.dir}"/>
+            </sourcepath>
+            <bootclasspath>
+                <path path="${platform.bootcp}"/>
+            </bootclasspath>
+        </nbjpdaconnect>
+    </target>
+    <target depends="init" if="netbeans.home" name="-debug-start-debugger">
+        <ejbjarproject1:nbjpdastart/>
+    </target>
+    <target depends="init,compile-single" if="netbeans.home" name="-debug-start-debuggee-single">
+        <fail unless="main.class">Must select one file in the IDE or set main.class</fail>
+        <ejbjarproject1:debug/>
+    </target>
+    <target depends="init,compile-single,-debug-start-debugger,-debug-start-debuggee-single" if="netbeans.home" name="debug-single-main"/>
+    <target depends="init" name="-pre-debug-fix">
+        <fail unless="fix.includes">Must set fix.includes</fail>
+        <property name="javac.includes" value="${fix.includes}.java"/>
+    </target>
+    <target depends="init,-pre-debug-fix,compile-single" if="netbeans.home" name="-do-debug-fix">
+        <ejbjarproject1:nbjpdareload/>
+    </target>
+    <target depends="init,-pre-debug-fix,-do-debug-fix" if="netbeans.home" name="debug-fix"/>
+    <!--
+            =================
+            PROFILING SECTION
+            =================
+            -->
+    <!--
+                pre NB7.2 profiling section; consider it deprecated
+            -->
+    <target description="Profile a J2EE project in the IDE." if="profiler.info.jvmargs.agent" name="-profile-pre72">
+        <fail unless="netbeans.home">This target only works when run from inside the NetBeans IDE.</fail>
+        <condition else="start-profiled-server" property="profiler.startserver.target" value="start-profiled-server-extraargs">
+            <isset property="profiler.info.jvmargs.extra"/>
+        </condition>
+        <antcall target="${profiler.startserver.target}"/>
+        <antcall target="run"/>
+        <antcall target="-profile-start-loadgen"/>
+    </target>
+    <target depends="profile-init,compile-test-single" if="profiler.info.jvmargs.agent" name="-profile-test-single-pre72">
+        <fail unless="netbeans.home">This target only works when run from inside the NetBeans IDE.</fail>
+        <nbprofiledirect>
+            <classpath>
+                <path path="${run.test.classpath}"/>
+                <path path="${j2ee.platform.classpath}"/>
+            </classpath>
+        </nbprofiledirect>
+        <junit dir="${profiler.info.dir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" jvm="${profiler.info.jvm}" showoutput="true">
+            <env key="${profiler.info.pathvar}" path="${profiler.info.agentpath}:${profiler.current.path}"/>
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+            <jvmarg line="${profiler.info.jvmargs}"/>
+            <test name="${profile.class}"/>
+            <classpath>
+                <path path="${run.test.classpath}"/>
+                <path path="${j2ee.platform.classpath}"/>
+            </classpath>
+            <syspropertyset>
+                <propertyref prefix="test-sys-prop."/>
+                <mapper from="test-sys-prop.*" to="*" type="glob"/>
+            </syspropertyset>
+            <formatter type="brief" usefile="false"/>
+            <formatter type="xml"/>
+        </junit>
+    </target>
+    <target name="start-profiled-server">
+        <nbstartprofiledserver forceRestart="${profiler.j2ee.serverForceRestart}" javaPlatform="${profiler.info.javaPlatform}" startupTimeout="${profiler.j2ee.serverStartupTimeout}">
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+            <jvmarg value="${profiler.j2ee.agentID}"/>
+        </nbstartprofiledserver>
+    </target>
+    <target name="start-profiled-server-extraargs">
+        <nbstartprofiledserver forceRestart="${profiler.j2ee.serverForceRestart}" javaPlatform="${profiler.info.javaPlatform}" startupTimeout="${profiler.j2ee.serverStartupTimeout}">
+            <jvmarg value="${profiler.info.jvmargs.extra}"/>
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+            <jvmarg value="${profiler.j2ee.agentID}"/>
+        </nbstartprofiledserver>
+    </target>
+    <!--
+                end of pre NB7.2 profiling section
+            -->
+    <target if="netbeans.home" name="-profile-check">
+        <condition property="profiler.configured">
+            <or>
+                <contains casesensitive="true" string="${run.jvmargs.ide}" substring="-agentpath:"/>
+                <contains casesensitive="true" string="${run.jvmargs.ide}" substring="-javaagent:"/>
+            </or>
+        </condition>
+    </target>
+    <target depends="init,compile,dist-directory-deploy" name="-do-profile">
+        <startprofiler/>
+        <nbstartserver profilemode="true"/>
+        <nbdeploy clientUrlPart="$" forceRedeploy="true" profilemode="true"/>
+        <antcall target="-profile-start-loadgen"/>
+    </target>
+    <target depends="-profile-check,-profile-pre72" description="Profile a J2EE project in the IDE." if="profiler.configured" name="profile" unless="profiler.info.jvmargs.agent">
+        <antcall target="-do-profile"/>
+    </target>
+    <target depends="-profile-test-single-pre72" name="profile-test-single"/>
+    <target depends="-profile-check" if="profiler.configured" name="profile-test" unless="profiler.info.jvmargs.agent">
+        <startprofiler/>
+        <antcall target="test-single"/>
+    </target>
+    <target if="profiler.loadgen.path" name="-profile-start-loadgen">
+        <loadgenstart path="${profiler.loadgen.path}"/>
+    </target>
+    <!--
+                JAVADOC SECTION
+            -->
+    <target depends="init" if="have.sources" name="javadoc-build">
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc additionalparam="${javadoc.additionalparam}" author="${javadoc.author}" charset="UTF-8" destdir="${dist.javadoc.dir}" docencoding="UTF-8" encoding="${javadoc.encoding.used}" executable="${platform.javadoc}" failonerror="true" noindex="${javadoc.noindex}" nonavbar="${javadoc.nonavbar}" notree="${javadoc.notree}" private="${javadoc.private}" source="${javac.source}" splitindex="${javadoc.splitindex}" use="${javadoc.use}" useexternalfile="true" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}">
+            <classpath>
+                <path path="${javac.classpath}:${j2ee.platform.classpath}"/>
+            </classpath>
+            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+        <copy todir="${dist.javadoc.dir}">
+            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/doc-files/**"/>
+            </fileset>
+            <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+                <include name="**/doc-files/**"/>
+            </fileset>
+        </copy>
+    </target>
+    <target depends="init,javadoc-build" if="netbeans.home" name="javadoc-browse" unless="no.javadoc.preview">
+        <nbbrowse file="${dist.javadoc.dir}/index.html"/>
+    </target>
+    <target depends="init,javadoc-build,javadoc-browse" description="Build Javadoc." name="javadoc"/>
+    <!--
+                TEST COMPILATION SECTION
+            -->
+    <target depends="init,compile" if="have.tests" name="-pre-pre-compile-test">
+        <mkdir dir="${build.test.classes.dir}"/>
+        <property name="j2ee.platform.embeddableejb.classpath" value=""/>
+    </target>
+    <target name="-pre-compile-test">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test" if="have.tests" name="-do-compile-test">
+        <ejbjarproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
+        <copy todir="${build.test.classes.dir}">
+            <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+        </copy>
+    </target>
+    <target name="-post-compile-test">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test,-do-compile-test,-post-compile-test" name="compile-test"/>
+    <target name="-pre-compile-test-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single" if="have.tests" name="-do-compile-test-single">
+        <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
+        <ejbjarproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" srcdir="${test.src.dir}"/>
+    </target>
+    <target name="-post-compile-test-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single,-do-compile-test-single,-post-compile-test-single" name="compile-test-single"/>
+    <!--
+                TEST EXECUTION SECTION
+            -->
+    <target depends="init" if="have.tests" name="-pre-test-run">
+        <mkdir dir="${build.test.results.dir}"/>
+    </target>
+    <target depends="init,compile-test,-pre-test-run" if="have.tests" name="-do-test-run">
+        <ejbjarproject2:test includes="${includes}" testincludes="**/*Test.java"/>
+    </target>
+    <target depends="init,compile-test,-pre-test-run,-do-test-run" if="have.tests" name="-post-test-run">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init" if="have.tests" name="test-report"/>
+    <target depends="init" if="netbeans.home+have.tests" name="-test-browse"/>
+    <target depends="init,compile-test,-pre-test-run,-do-test-run,test-report,-post-test-run,-test-browse" description="Run unit tests." name="test"/>
+    <target depends="init" if="have.tests" name="-pre-test-run-single">
+        <mkdir dir="${build.test.results.dir}"/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-do-test-run-single">
+        <fail unless="test.includes">Must select some files in the IDE or set test.includes</fail>
+        <ejbjarproject2:test excludes="" includes="${test.includes}" testincludes="${test.includes}"/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single" if="have.tests" name="-post-test-run-single">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single,-post-test-run-single" description="Run single unit test." name="test-single"/>
+    <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-do-test-run-single-method">
+        <fail unless="test.class">Must select some files in the IDE or set test.class</fail>
+        <fail unless="test.method">Must select some method in the IDE or set test.method</fail>
+        <ejbjarproject2:test excludes="" includes="${javac.includes}" testincludes="${test.class}" testmethods="${test.method}"/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single-method" if="have.tests" name="-post-test-run-single-method">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single-method,-post-test-run-single-method" description="Run single unit test." name="test-single-method"/>
+    <!--
+                TEST DEBUGGING SECTION
+            -->
+    <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-debug-start-debuggee-test">
+        <fail unless="test.class">Must select one file in the IDE or set test.class</fail>
+        <ejbjarproject2:test-debug excludes="" includes="${javac.includes}" testClass="${test.class}" testincludes="${javac.includes}"/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-debug-start-debuggee-test-method">
+        <fail unless="test.class">Must select one file in the IDE or set test.class</fail>
+        <fail unless="test.method">Must select some method in the IDE or set test.method</fail>
+        <ejbjarproject2:test-debug excludes="" includes="${javac.includes}" testClass="${test.class}" testMethod="${test.method}" testincludes="${test.class}" testmethods="${test.method}"/>
+    </target>
+    <target depends="init,compile-test" if="netbeans.home+have.tests" name="-debug-start-debugger-test">
+        <ejbjarproject1:nbjpdastart classpath="${debug.test.classpath}" name="${test.class}"/>
+    </target>
+    <target depends="init,compile-test,-debug-start-debugger-test,-debug-start-debuggee-test" name="debug-test"/>
+    <target depends="init,compile-test-single,-debug-start-debugger-test,-debug-start-debuggee-test-method" name="debug-test-method"/>
+    <target depends="debug-test-method" name="debug-single-method"/>
+    <target depends="init,-pre-debug-fix,compile-test-single" if="netbeans.home" name="-do-debug-fix-test">
+        <ejbjarproject1:nbjpdareload dir="${build.test.classes.dir}"/>
+    </target>
+    <target depends="init,-pre-debug-fix,-do-debug-fix-test" if="netbeans.home" name="debug-fix-test"/>
+    <!--
+                CLEANUP SECTION
+            -->
+    <target depends="init" name="deps-clean" unless="no.deps"/>
+    <target depends="init" name="-do-clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+    <target name="-post-clean">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target depends="init" if="netbeans.home" name="undeploy-clean">
+        <nbundeploy failOnError="false" startServer="false"/>
+    </target>
+    <target depends="init,undeploy-clean,deps-clean,-do-clean,-post-clean" description="Clean build products." name="clean"/>
+    <target depends="clean" name="clean-ear"/>
+</project>
+</file>
+
+<file path="nbproject/genfiles.properties">
+build.xml.data.CRC32=e179a9e3
+build.xml.script.CRC32=d215fbab
+build.xml.stylesheet.CRC32=a737d6c5@1.81
+# This file is used by a NetBeans-based IDE to track changes in generated files such as build-impl.xml.
+# Do not edit this file. You may delete it but then the IDE will never regenerate such files for you.
+nbproject/build-impl.xml.data.CRC32=e179a9e3
+nbproject/build-impl.xml.script.CRC32=a8635df1
+nbproject/build-impl.xml.stylesheet.CRC32=62693482@1.81
+</file>
+
+<file path="nbproject/private/private.properties">
+deploy.ant.properties.file=C:\\Users\\ttnha\\AppData\\Roaming\\NetBeans\\26\\config\\PayaraEE6\\Properties\\pfv3-1897950371.properties
+j2ee.platform.is.jsr109=true
+j2ee.server.domain=C:/Servers1/payara-6.2025.7/payara6/glassfish/domains/domain1
+j2ee.server.home=C:/Servers1/payara-6.2025.7/payara6/glassfish
+j2ee.server.instance=[C:\\Servers1\\payara-6.2025.7\\payara6\\glassfish;C:\\Servers1\\payara-6.2025.7\\payara6\\glassfish\\domains\\domain1]deployer:pfv5ee8:localhost:4848
+j2ee.server.middleware=C:/Servers1/payara-6.2025.7/payara6
+javac.debug=true
+javadoc.preview=true
+netbeans.user=C:\\Users\\ttnha\\AppData\\Roaming\\NetBeans\\26
+</file>
+
+<file path="nbproject/private/private.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group/>
+    </open-files>
+</project-private>
+</file>
+
+<file path="nbproject/project.properties">
+annotation.processing.enabled=true
+annotation.processing.enabled.in.editor=true
+annotation.processing.processor.options=-Aeclipselink.canonicalmodel.use_static_factory=false
+annotation.processing.processors.list=
+annotation.processing.run.all.processors=true
+annotation.processing.source.output=${build.generated.sources.dir}/ap-source-output
+build.classes.dir=${build.dir}/classes
+build.classes.excludes=**/*.java,**/*.form,**/.nbattrs
+build.dir=build
+build.ear.classes.dir=${build.dir}/classes
+build.generated.dir=${build.dir}/generated
+build.generated.sources.dir=${build.dir}/generated-sources
+build.test.classes.dir=${build.dir}/test/classes
+build.test.results.dir=${build.dir}/test/results
+debug.classpath=${javac.classpath}:${build.classes.dir}
+debug.test.classpath=\
+    ${run.test.classpath}
+dist.dir=dist
+dist.ear.jar=${dist.dir}/${jar.name}
+dist.jar=${dist.dir}/${jar.name}
+dist.javadoc.dir=${dist.dir}/javadoc
+endorsed.classpath=
+excludes=
+file.reference.hibernate-core-6.4.0.Final.jar=C:\\jars\\hibernate-core-6.4.0.Final.jar
+file.reference.hibernate-validator-8.0.1.Final.jar=C:\\jars\\hibernate-validator-8.0.1.Final.jar
+file.reference.jakarta.ejb-api-4.0.1.jar=C:\\jars\\jakarta.ejb-api-4.0.1.jar
+file.reference.jakarta.el-api-5.0.1.jar=C:\\jars\\jakarta.el-api-5.0.1.jar
+file.reference.jakarta.persistence-api-3.1.0.jar=C:\\jars\\jakarta.persistence-api-3.1.0.jar
+file.reference.jakarta.transaction-api-2.0.1.jar=C:\\jars\\jakarta.transaction-api-2.0.1.jar
+file.reference.jakarta.validation-api-3.0.1.jar=C:\\jars\\jakarta.validation-api-3.0.1.jar
+file.reference.jbcrypt-0.4.jar=C:\\jars\\jbcrypt-0.4.jar
+file.reference.postgresql-42.7.7.jar=C:\\jars\\postgresql-42.7.7.jar
+includes=**
+j2ee.compile.on.save=true
+j2ee.deploy.on.save=true
+j2ee.platform=10
+j2ee.platform.classpath=
+j2ee.platform.embeddableejb.classpath=${j2ee.server.home}/lib/embedded/glassfish-embedded-static-shell.jar
+j2ee.platform.wscompile.classpath=${j2ee.server.home}/modules/webservices-osgi.jar
+j2ee.platform.wsgen.classpath=${j2ee.server.home}/modules/webservices-osgi.jar:${j2ee.server.home}/modules/webservices-api-osgi.jar:${j2ee.server.home}/modules/jaxb-osgi.jar
+j2ee.platform.wsimport.classpath=${j2ee.server.home}/modules/webservices-osgi.jar:${j2ee.server.home}/modules/webservices-api-osgi.jar:${j2ee.server.home}/modules/jaxb-osgi.jar
+j2ee.platform.wsit.classpath=
+j2ee.server.type=pfv5ee8
+jar.compress=false
+jar.name=online-learning-management-system-ejb.jar
+jars.in.ejbjar=false
+javac.classpath=\
+    ${file.reference.jakarta.ejb-api-4.0.1.jar}:\
+    ${file.reference.jakarta.persistence-api-3.1.0.jar}:\
+    ${file.reference.jakarta.transaction-api-2.0.1.jar}:\
+    ${file.reference.postgresql-42.7.7.jar}:\
+    ${file.reference.jbcrypt-0.4.jar}:\
+    ${file.reference.hibernate-core-6.4.0.Final.jar}:\
+    ${file.reference.hibernate-validator-8.0.1.Final.jar}:\
+    ${file.reference.jakarta.el-api-5.0.1.jar}:\
+    ${file.reference.jakarta.validation-api-3.0.1.jar}
+javac.debug=true
+javac.deprecation=false
+javac.processorpath=\
+    ${javac.classpath}
+javac.source=21
+javac.target=21
+javac.test.classpath=\
+    ${javac.classpath}:\
+    ${build.classes.dir}
+javac.test.processorpath=${javac.test.classpath}
+javadoc.additionalparam=
+javadoc.author=false
+javadoc.encoding=${source.encoding}
+javadoc.noindex=false
+javadoc.nonavbar=false
+javadoc.notree=false
+javadoc.preview=true
+javadoc.private=false
+javadoc.splitindex=true
+javadoc.use=true
+javadoc.version=false
+javadoc.windowtitle=
+meta.inf=${source.root}/conf
+meta.inf.excludes=sun-cmp-mappings.xml
+platform.active=JDK_21
+resource.dir=setup
+run.test.classpath=\
+    ${javac.test.classpath}:\
+    ${build.test.classes.dir}
+# Space-separated list of JVM arguments used when running a class with a main method or a unit test
+# (you may also define separate properties like run-sys-prop.name=value instead of -Dname=value):
+runmain.jvmargs=
+source.encoding=UTF-8
+source.root=src
+src.dir=${source.root}/java
+test.src.dir=test
+</file>
+
+<file path="nbproject/project.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.j2ee.ejbjarproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
+            <name>online-learning-management-system-ejb</name>
+            <minimum-ant-version>1.6.5</minimum-ant-version>
+            <explicit-platform explicit-source-supported="true"/>
+            <included-library dirs="200">file.reference.jakarta.ejb-api-4.0.1.jar</included-library>
+            <included-library dirs="200">file.reference.jakarta.persistence-api-3.1.0.jar</included-library>
+            <included-library dirs="200">file.reference.jakarta.transaction-api-2.0.1.jar</included-library>
+            <included-library dirs="200">file.reference.postgresql-42.7.7.jar</included-library>
+            <included-library dirs="200">file.reference.jbcrypt-0.4.jar</included-library>
+            <included-library dirs="200">file.reference.hibernate-core-6.4.0.Final.jar</included-library>
+            <included-library dirs="200">file.reference.hibernate-validator-8.0.1.Final.jar</included-library>
+            <included-library dirs="200">file.reference.jakarta.el-api-5.0.1.jar</included-library>
+            <included-library dirs="200">file.reference.jakarta.validation-api-3.0.1.jar</included-library>
+            <source-roots>
+                <root id="src.dir"/>
+            </source-roots>
+            <test-roots>
+                <root id="test.src.dir"/>
+            </test-roots>
+        </data>
+    </configuration>
+</project>
+</file>
+
+<file path="src/conf/MANIFEST.MF">
+Manifest-Version: 1.0
+</file>
+
+<file path="src/conf/persistence.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+  <persistence-unit name="online-learning-management-system-ejbPU" transaction-type="RESOURCE_LOCAL">
+    <class>entities.AppUser</class>
+    <class>entities.Role</class>
+    <class>entities.UserRole</class>
+    <class>entities.Course</class>
+    <class>entities.Assignment</class>
+    <class>entities.Enrollment</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/olms"/>
+      <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+      <property name="jakarta.persistence.jdbc.password" value="123"/>
+      <!-- Hibernate properties -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
+</file>
+
+<file path="src/java/beans/AuthenticationSB.java">
+package beans;
+
+import entities.AppUser;
+import entities.Role;
+import entities.UserRole;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import utils.PasswordHasher;
+import utils.ValidationUtils;
+import utils.ValidationResult;
+
+/**
+ * Session Bean implementation class AuthenticationSB
+ */
+@Stateless
+@LocalBean
+public class AuthenticationSB implements AuthenticationSBLocal {
+    private final EntityManagerFactory emf;
+    private final EntityManager em;
+    
+    public AuthenticationSB() {
+        emf = Persistence.createEntityManagerFactory("online-learning-management-system-ejbPU");
+        em = emf.createEntityManager();
+    }
+    
+    private void persist(Object object) {
+        try {
+            em.getTransaction().begin();
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        }
+    }
+    
+    // In-memory session storage (in a production environment, consider using a distributed cache)
+    private static final ConcurrentHashMap<String, SessionData> activeSessions = new ConcurrentHashMap<>();
+    private static final long SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    
+    private static class SessionData {
+        final AppUser user;
+        final long expiryTime;
+        
+        SessionData(AppUser user, long expiryTime) {
+            this.user = user;
+            this.expiryTime = expiryTime;
+        }
+    }
+
+    /**
+     * Test method to verify database connection and entity manager injection
+     */
+    @Override
+    public boolean testConnection() {
+        try {
+            System.out.println("Testing database connection...");
+            
+            if (em == null || !em.isOpen()) {
+                System.err.println("EntityManager is not initialized or closed");
+                return false;
+            }
+            
+            System.out.println("EntityManager is ready");
+            
+            // Try a simple query
+            TypedQuery<Long> query = em.createQuery("SELECT COUNT(r) FROM Role r", Long.class);
+            Long count = query.getSingleResult();
+            
+            System.out.println("Database connection successful. Role count: " + count);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Database connection test failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public AppUser registerUser(String fullName, String email, String password, String roleName) {
+        try {
+            // Test connection first
+            if (!testConnection()) {
+                System.err.println("Database connection test failed");
+                return null;
+            }
+            
+            // Sanitize inputs
+            String sanitizedFullName = ValidationUtils.sanitizeInput(fullName);
+            String sanitizedEmail = ValidationUtils.sanitizeInput(email);
+            
+            // Validate registration data
+            ValidationResult validationResult = ValidationUtils.validateRegistration(
+                sanitizedFullName, sanitizedEmail, password, password); // Using password as confirmPassword for now
+            
+            if (!validationResult.isValid()) {
+                System.err.println("Validation failed: " + validationResult.getMessage());
+                return null;
+            }
+            
+            // Check if email already exists
+            TypedQuery<AppUser> query = em.createNamedQuery("AppUser.findByEmail", AppUser.class);
+            query.setParameter("email", sanitizedEmail.toLowerCase());
+            if (!query.getResultList().isEmpty()) {
+                return null; // Email already exists
+            }
+            
+            // Create new user
+            AppUser newUser = new AppUser();
+            newUser.setFullName(sanitizedFullName);
+            newUser.setEmail(sanitizedEmail.toLowerCase());
+            newUser.setPasswordHash(PasswordHasher.hashPassword(password));
+            newUser.setCreatedAt(new Date());
+            
+            // Find the role
+            TypedQuery<Role> roleQuery = em.createNamedQuery("Role.findByRoleName", Role.class);
+            roleQuery.setParameter("roleName", roleName);
+            List<Role> roles = roleQuery.getResultList();
+            
+            if (roles.isEmpty()) {
+                return null; // Role not found
+            }
+            
+            // Save the user
+            persist(newUser);
+            
+            // Assign role
+            UserRole userRole = new UserRole();
+            userRole.setUserId(newUser);
+            userRole.setRoleId(roles.get(0));
+            persist(userRole);
+            
+            return newUser;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    @Override
+    public AppUser login(String email, String password) {
+        try {
+            // Sanitize email input
+            String sanitizedEmail = ValidationUtils.sanitizeInput(email);
+            
+            // Validate login data
+            ValidationResult validationResult = ValidationUtils.validateLogin(sanitizedEmail, password);
+            if (!validationResult.isValid()) {
+                System.err.println("Login validation failed: " + validationResult.getMessage());
+                return null;
+            }
+            
+            TypedQuery<AppUser> query = em.createNamedQuery("AppUser.findByEmail", AppUser.class);
+            query.setParameter("email", sanitizedEmail.toLowerCase());
+            List<AppUser> users = query.getResultList();
+            
+            if (users.isEmpty()) {
+                return null; // User not found
+            }
+            
+            AppUser user = users.get(0);
+            if (PasswordHasher.verifyPassword(password, user.getPasswordHash())) {
+                return user;
+            }
+            return null; // Invalid password
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean logout(Integer userId) {
+        if (userId == null) {
+            return false;
+        }
+        
+        // Remove all sessions for this user
+        boolean removed = false;
+        for (var entry : activeSessions.entrySet()) {
+            if (entry.getValue().user.getUserId().equals(userId)) {
+                activeSessions.remove(entry.getKey());
+                removed = true;
+            }
+        }
+        return removed;
+    }
+    
+    // Helper method to create a new session
+    public String createSession(AppUser user) {
+        String sessionId = UUID.randomUUID().toString();
+        long expiryTime = System.currentTimeMillis() + SESSION_TIMEOUT;
+        activeSessions.put(sessionId, new SessionData(user, expiryTime));
+        return sessionId;
+    }
+
+    @Override
+    public AppUser getCurrentUser(String sessionId) {
+        if (sessionId == null) {
+            return null;
+        }
+        
+        SessionData sessionData = activeSessions.get(sessionId);
+        if (sessionData == null) {
+            return null;
+        }
+        
+        // Check if session has expired
+        if (System.currentTimeMillis() > sessionData.expiryTime) {
+            activeSessions.remove(sessionId);
+            return null;
+        }
+        
+        // Refresh session
+        sessionData = new SessionData(sessionData.user, System.currentTimeMillis() + SESSION_TIMEOUT);
+        activeSessions.put(sessionId, sessionData);
+        
+        return sessionData.user;
+    }
+
+    @Override
+    public boolean hasRole(Integer userId, String roleName) {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(ur) FROM UserRole ur WHERE ur.userId.userId = :userId AND ur.roleId.roleName = :roleName", 
+                Long.class);
+            query.setParameter("userId", userId);
+            query.setParameter("roleName", roleName);
+            return query.getSingleResult() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean validateSession(String sessionId) {
+        return getCurrentUser(sessionId) != null;
+    }
+    
+    // Helper method to clean up expired sessions (should be called periodically)
+    public void cleanupExpiredSessions() {
+        long currentTime = System.currentTimeMillis();
+        activeSessions.entrySet().removeIf(entry -> entry.getValue().expiryTime < currentTime);
+    }
+}
+</file>
+
+<file path="src/java/beans/AuthenticationSBLocal.java">
+package beans;
+
+import entities.AppUser;
+import jakarta.ejb.Local;
+
+/**
+ * Local interface for authentication-related business logic
+ */
+@Local
+public interface AuthenticationSBLocal {
+    
+    /**
+     * Tests the database connection and entity manager injection
+     * @return true if connection is successful, false otherwise
+     */
+    boolean testConnection();
+    
+    /**
+     * Registers a new user with the system
+     * @param fullName User's full name
+     * @param email User's email (must be unique)
+     * @param password User's password (will be hashed)
+     * @param roleName Role to assign to the user (e.g., "Student", "Instructor", "Administrator")
+     * @return The created AppUser object if successful, null otherwise
+     */
+    AppUser registerUser(String fullName, String email, String password, String roleName);
+    
+    /**
+     * Authenticates a user with email and password
+     * @param email User's email
+     * @param password User's password
+     * @return Authenticated AppUser if successful, null otherwise
+     */
+    AppUser login(String email, String password);
+    
+    /**
+     * Logs out the current user
+     * @param userId ID of the user to log out
+     * @return true if logout was successful, false otherwise
+     */
+    boolean logout(Integer userId);
+    
+    /**
+     * Gets the currently logged-in user by session ID
+     * @param sessionId The session ID
+     * @return The logged-in user or null if not found/expired
+     */
+    AppUser getCurrentUser(String sessionId);
+    
+    /**
+     * Checks if a user has a specific role
+     * @param userId The user ID to check
+     * @param roleName The role name to verify
+     * @return true if user has the role, false otherwise
+     */
+    boolean hasRole(Integer userId, String roleName);
+    
+    /**
+     * Validates if a session is still active
+     * @param sessionId The session ID to validate
+     * @return true if session is valid, false otherwise
+     */
+    boolean validateSession(String sessionId);
+}
+</file>
+
+<file path="src/java/entities/AppUser.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "app_user")
+@NamedQueries({
+    @NamedQuery(name = "AppUser.findAll", query = "SELECT a FROM AppUser a"),
+    @NamedQuery(name = "AppUser.findByUserId", query = "SELECT a FROM AppUser a WHERE a.userId = :userId"),
+    @NamedQuery(name = "AppUser.findByFullName", query = "SELECT a FROM AppUser a WHERE a.fullName = :fullName"),
+    @NamedQuery(name = "AppUser.findByEmail", query = "SELECT a FROM AppUser a WHERE a.email = :email"),
+    @NamedQuery(name = "AppUser.findByPasswordHash", query = "SELECT a FROM AppUser a WHERE a.passwordHash = :passwordHash"),
+    @NamedQuery(name = "AppUser.findByCreatedAt", query = "SELECT a FROM AppUser a WHERE a.createdAt = :createdAt")})
+public class AppUser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "user_id")
+    private Integer userId;
+    @Basic(optional = false)
+    @Column(name = "full_name")
+    private String fullName;
+    @Basic(optional = false)
+    @Column(name = "email")
+    private String email;
+    @Basic(optional = false)
+    @Column(name = "password_hash")
+    private String passwordHash;
+    @Basic(optional = false)
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    // User roles are managed through the UserRole entity
+    // Temporarily commented out to fix circular reference issue
+    // @OneToMany(mappedBy = "instructorId")
+    // private List<Course> courseList;
+    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "studentId")
+    // private List<Enrollment> enrollmentList;
+
+    public AppUser() {
+    }
+
+    public AppUser(Integer userId) {
+        this.userId = userId;
+    }
+
+    public AppUser(Integer userId, String fullName, String email, String passwordHash, Date createdAt) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.createdAt = createdAt;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // User roles are managed through the UserRole entity
+
+    // Temporarily commented out to fix circular reference issue
+    // public List<Course> getCourseList() {
+    //     return courseList;
+    // }
+    // 
+    // public void setCourseList(List<Course> courseList) {
+    //     this.courseList = courseList;
+    // }
+    // 
+    // public List<Enrollment> getEnrollmentList() {
+    //     return enrollmentList;
+    // }
+    // 
+    // public void setEnrollmentList(List<Enrollment> enrollmentList) {
+    //     this.enrollmentList = enrollmentList;
+    // }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (userId != null ? userId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof AppUser)) {
+            return false;
+        }
+        AppUser other = (AppUser) object;
+        if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+}
+</file>
+
+<file path="src/java/entities/Assignment.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "assignment")
+@NamedQueries({
+    @NamedQuery(name = "Assignment.findAll", query = "SELECT a FROM Assignment a"),
+    @NamedQuery(name = "Assignment.findByAssignmentId", query = "SELECT a FROM Assignment a WHERE a.assignmentId = :assignmentId"),
+    @NamedQuery(name = "Assignment.findByTitle", query = "SELECT a FROM Assignment a WHERE a.title = :title"),
+    @NamedQuery(name = "Assignment.findByDescription", query = "SELECT a FROM Assignment a WHERE a.description = :description"),
+    @NamedQuery(name = "Assignment.findByDueDate", query = "SELECT a FROM Assignment a WHERE a.dueDate = :dueDate")})
+public class Assignment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "assignment_id")
+    private Integer assignmentId;
+    @Basic(optional = false)
+    @Column(name = "title")
+    private String title;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "due_date")
+    @Temporal(TemporalType.DATE)
+    private Date dueDate;
+    @JoinColumn(name = "course_id", referencedColumnName = "course_id")
+    @ManyToOne(optional = false)
+    private Course courseId;
+
+    public Assignment() {
+    }
+
+    public Assignment(Integer assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    public Assignment(Integer assignmentId, String title) {
+        this.assignmentId = assignmentId;
+        this.title = title;
+    }
+
+    public Integer getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(Integer assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Course getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Course courseId) {
+        this.courseId = courseId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (assignmentId != null ? assignmentId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Assignment)) {
+            return false;
+        }
+        Assignment other = (Assignment) object;
+        if ((this.assignmentId == null && other.assignmentId != null) || (this.assignmentId != null && !this.assignmentId.equals(other.assignmentId))) {
+            return false;
+        }
+        return true;
+    }
+
+}
+</file>
+
+<file path="src/java/entities/Course.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "course")
+@NamedQueries({
+    @NamedQuery(name = "Course.findAll", query = "SELECT c FROM Course c"),
+    @NamedQuery(name = "Course.findByCourseId", query = "SELECT c FROM Course c WHERE c.courseId = :courseId"),
+    @NamedQuery(name = "Course.findByTitle", query = "SELECT c FROM Course c WHERE c.title = :title"),
+    @NamedQuery(name = "Course.findByDescription", query = "SELECT c FROM Course c WHERE c.description = :description"),
+    @NamedQuery(name = "Course.findByPrerequisites", query = "SELECT c FROM Course c WHERE c.prerequisites = :prerequisites"),
+    @NamedQuery(name = "Course.findByCreatedAt", query = "SELECT c FROM Course c WHERE c.createdAt = :createdAt")})
+public class Course implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "course_id")
+    private Integer courseId;
+    @Basic(optional = false)
+    @Column(name = "title")
+    private String title;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "prerequisites")
+    private String prerequisites;
+    @Basic(optional = false)
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @JoinColumn(name = "instructor_id", referencedColumnName = "user_id")
+    @ManyToOne
+    private AppUser instructorId;
+
+    public Course() {
+    }
+
+    public Course(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Course(Integer courseId, String title, Date createdAt) {
+        this.courseId = courseId;
+        this.title = title;
+        this.createdAt = createdAt;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPrerequisites() {
+        return prerequisites;
+    }
+
+    public void setPrerequisites(String prerequisites) {
+        this.prerequisites = prerequisites;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public AppUser getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(AppUser instructorId) {
+        this.instructorId = instructorId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (courseId != null ? courseId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Course)) {
+            return false;
+        }
+        Course other = (Course) object;
+        if ((this.courseId == null && other.courseId != null) || (this.courseId != null && !this.courseId.equals(other.courseId))) {
+            return false;
+        }
+        return true;
+    }
+
+}
+</file>
+
+<file path="src/java/entities/Enrollment.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "enrollment")
+@NamedQueries({
+    @NamedQuery(name = "Enrollment.findAll", query = "SELECT e FROM Enrollment e"),
+    @NamedQuery(name = "Enrollment.findByEnrollmentId", query = "SELECT e FROM Enrollment e WHERE e.enrollmentId = :enrollmentId"),
+    @NamedQuery(name = "Enrollment.findByEnrolledAt", query = "SELECT e FROM Enrollment e WHERE e.enrolledAt = :enrolledAt"),
+    @NamedQuery(name = "Enrollment.findByProgress", query = "SELECT e FROM Enrollment e WHERE e.progress = :progress")})
+public class Enrollment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "enrollment_id")
+    private Integer enrollmentId;
+    @Basic(optional = false)
+    @Column(name = "enrolled_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date enrolledAt;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "progress")
+    private BigDecimal progress;
+    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
+    @ManyToOne(optional = false)
+    private AppUser studentId;
+    @JoinColumn(name = "course_id", referencedColumnName = "course_id")
+    @ManyToOne(optional = false)
+    private Course courseId;
+
+    public Enrollment() {
+    }
+
+    public Enrollment(Integer enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
+
+    public Enrollment(Integer enrollmentId, Date enrolledAt) {
+        this.enrollmentId = enrollmentId;
+        this.enrolledAt = enrolledAt;
+    }
+
+    public Integer getEnrollmentId() {
+        return enrollmentId;
+    }
+
+    public void setEnrollmentId(Integer enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
+
+    public Date getEnrolledAt() {
+        return enrolledAt;
+    }
+
+    public void setEnrolledAt(Date enrolledAt) {
+        this.enrolledAt = enrolledAt;
+    }
+
+    public BigDecimal getProgress() {
+        return progress;
+    }
+
+    public void setProgress(BigDecimal progress) {
+        this.progress = progress;
+    }
+
+    public AppUser getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(AppUser studentId) {
+        this.studentId = studentId;
+    }
+
+    public Course getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Course courseId) {
+        this.courseId = courseId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (enrollmentId != null ? enrollmentId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Enrollment)) {
+            return false;
+        }
+        Enrollment other = (Enrollment) object;
+        if ((this.enrollmentId == null && other.enrollmentId != null) || (this.enrollmentId != null && !this.enrollmentId.equals(other.enrollmentId))) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+}
+</file>
+
+<file path="src/java/entities/Role.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "role")
+@NamedQueries({
+    @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
+    @NamedQuery(name = "Role.findByRoleId", query = "SELECT r FROM Role r WHERE r.roleId = :roleId"),
+    @NamedQuery(name = "Role.findByRoleName", query = "SELECT r FROM Role r WHERE r.roleName = :roleName")})
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "role_id")
+    private Integer roleId;
+    @Basic(optional = false)
+    @Column(name = "role_name")
+    private String roleName;
+    // User roles are managed through the UserRole entity
+
+    public Role() {
+    }
+
+    public Role(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Role(Integer roleId, String roleName) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    // User roles are managed through the UserRole entity
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (roleId != null ? roleId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Role)) {
+            return false;
+        }
+        Role other = (Role) object;
+        if ((this.roleId == null && other.roleId != null) || (this.roleId != null && !this.roleId.equals(other.roleId))) {
+            return false;
+        }
+        return true;
+    }
+
+ 
+    
+}
+</file>
+
+<file path="src/java/entities/UserRole.java">
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package entities;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import java.io.Serializable;
+
+/**
+ *
+ * @author ttnha
+ */
+@Entity
+@Table(name = "user_role")
+@NamedQueries({
+    @NamedQuery(name = "UserRole.findAll", query = "SELECT u FROM UserRole u"),
+    @NamedQuery(name = "UserRole.findByUserRoleId", query = "SELECT u FROM UserRole u WHERE u.userRoleId = :userRoleId")})
+public class UserRole implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "user_role_id")
+    private Integer userRoleId;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @ManyToOne(optional = false)
+    private AppUser userId;
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @ManyToOne(optional = false)
+    private Role roleId;
+
+    public UserRole() {
+    }
+
+    public UserRole(Integer userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
+    public Integer getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(Integer userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
+    public AppUser getUserId() {
+        return userId;
+    }
+
+    public void setUserId(AppUser userId) {
+        this.userId = userId;
+    }
+
+    public Role getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Role roleId) {
+        this.roleId = roleId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (userRoleId != null ? userRoleId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof UserRole)) {
+            return false;
+        }
+        UserRole other = (UserRole) object;
+        if ((this.userRoleId == null && other.userRoleId != null) || (this.userRoleId != null && !this.userRoleId.equals(other.userRoleId))) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+}
+</file>
+
+<file path="src/java/utils/PasswordHasher.java">
+package utils;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+/**
+ * Utility class for password hashing and verification using BCrypt
+ */
+public class PasswordHasher {
+    
+    // Define the workload for the BCrypt hashing (4-31, default is 10)
+    private static final int WORKLOAD = 12;
+    
+    /**
+     * Hashes a password using BCrypt
+     * @param password The plain text password to hash
+     * @return The hashed password
+     */
+    public static String hashPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        
+        // Generate a salt and hash the password
+        String salt = BCrypt.gensalt(WORKLOAD);
+        return BCrypt.hashpw(password, salt);
+    }
+    
+    /**
+     * Verifies a plain text password against a hashed password
+     * @param plainPassword The plain text password to verify
+     * @param hashedPassword The hashed password to verify against
+     * @return true if the password matches, false otherwise
+     */
+    public static boolean verifyPassword(String plainPassword, String hashedPassword) {
+        if (plainPassword == null || plainPassword.isEmpty()) {
+            return false;
+        }
+        if (hashedPassword == null || hashedPassword.isEmpty()) {
+            return false;
+        }
+        
+        try {
+            return BCrypt.checkpw(plainPassword, hashedPassword);
+        } catch (IllegalArgumentException e) {
+            // Handle case where hashedPassword is not a valid BCrypt hash
+            return false;
+        }
+    }
+}
+</file>
+
+<file path="src/java/utils/ValidationResult.java">
+package utils;
+
+/**
+ * Utility class to hold validation results
+ */
+public class ValidationResult {
+    private boolean valid;
+    private String message;
+    private String errorCode;
+    
+    public ValidationResult() {
+        this.valid = true;
+        this.message = "";
+        this.errorCode = "";
+    }
+    
+    public ValidationResult(boolean valid, String message) {
+        this.valid = valid;
+        this.message = message;
+        this.errorCode = "";
+    }
+    
+    public ValidationResult(boolean valid, String message, String errorCode) {
+        this.valid = valid;
+        this.message = message;
+        this.errorCode = errorCode;
+    }
+    
+    // Getters and Setters
+    public boolean isValid() {
+        return valid;
+    }
+    
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
+    public String getErrorCode() {
+        return errorCode;
+    }
+    
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+    
+    // Static factory methods for common results
+    public static ValidationResult success() {
+        return new ValidationResult(true, "Validation successful");
+    }
+    
+    public static ValidationResult success(String message) {
+        return new ValidationResult(true, message);
+    }
+    
+    public static ValidationResult error(String message) {
+        return new ValidationResult(false, message);
+    }
+    
+    public static ValidationResult error(String message, String errorCode) {
+        return new ValidationResult(false, message, errorCode);
+    }
+}
+</file>
+
+<file path="src/java/utils/ValidationUtils.java">
+package utils;
+
+import java.util.regex.Pattern;
+
+/**
+ * Utility class for validation operations
+ */
+public class ValidationUtils {
+    
+    // Email regex pattern
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+        "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    );
+    
+    // Password regex pattern - requires at least 6 chars, 1 uppercase, 1 lowercase, 1 digit
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+    );
+    
+    /**
+     * Validates user registration data
+     */
+    public static ValidationResult validateRegistration(String fullName, String email, String password, String confirmPassword) {
+        // Validate full name
+        ValidationResult nameResult = validateFullName(fullName);
+        if (!nameResult.isValid()) {
+            return nameResult;
+        }
+        
+        // Validate email
+        ValidationResult emailResult = validateEmail(email);
+        if (!emailResult.isValid()) {
+            return emailResult;
+        }
+        
+        // Validate password
+        ValidationResult passwordResult = validatePassword(password);
+        if (!passwordResult.isValid()) {
+            return passwordResult;
+        }
+        
+        // Validate password confirmation
+        ValidationResult confirmResult = validatePasswordConfirmation(password, confirmPassword);
+        if (!confirmResult.isValid()) {
+            return confirmResult;
+        }
+        
+        return ValidationResult.success("All validation checks passed");
+    }
+    
+    /**
+     * Validates login data
+     */
+    public static ValidationResult validateLogin(String email, String password) {
+        // Validate email
+        ValidationResult emailResult = validateEmail(email);
+        if (!emailResult.isValid()) {
+            return emailResult;
+        }
+        
+        // Validate password (basic check for login)
+        if (password == null || password.trim().isEmpty()) {
+            return ValidationResult.error("Password is required", "PASSWORD_REQUIRED");
+        }
+        
+        return ValidationResult.success("Login validation passed");
+    }
+    
+    /**
+     * Validates full name
+     */
+    public static ValidationResult validateFullName(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return ValidationResult.error("Full name is required", "NAME_REQUIRED");
+        }
+        
+        String trimmedName = fullName.trim();
+        if (trimmedName.length() < 2) {
+            return ValidationResult.error("Full name must be at least 2 characters long", "NAME_TOO_SHORT");
+        }
+        
+        if (trimmedName.length() > 50) {
+            return ValidationResult.error("Full name cannot exceed 50 characters", "NAME_TOO_LONG");
+        }
+        
+        // Check if name contains only letters, spaces, and common punctuation
+        if (!trimmedName.matches("^[a-zA-Z\\s\\-']+$")) {
+            return ValidationResult.error("Full name can only contain letters, spaces, hyphens, and apostrophes", "NAME_INVALID_CHARS");
+        }
+        
+        return ValidationResult.success();
+    }
+    
+    /**
+     * Validates email address
+     */
+    public static ValidationResult validateEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return ValidationResult.error("Email is required", "EMAIL_REQUIRED");
+        }
+        
+        String trimmedEmail = email.trim().toLowerCase();
+        
+        if (!EMAIL_PATTERN.matcher(trimmedEmail).matches()) {
+            return ValidationResult.error("Please enter a valid email address", "EMAIL_INVALID_FORMAT");
+        }
+        
+        if (trimmedEmail.length() > 100) {
+            return ValidationResult.error("Email address is too long", "EMAIL_TOO_LONG");
+        }
+        
+        return ValidationResult.success();
+    }
+    
+    /**
+     * Validates password strength
+     */
+    public static ValidationResult validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            return ValidationResult.error("Password is required", "PASSWORD_REQUIRED");
+        }
+        
+        if (password.length() < 6) {
+            return ValidationResult.error("Password must be at least 6 characters long", "PASSWORD_TOO_SHORT");
+        }
+        
+        if (password.length() > 128) {
+            return ValidationResult.error("Password is too long", "PASSWORD_TOO_LONG");
+        }
+        
+        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            return ValidationResult.error(
+                "Password must contain at least one uppercase letter, one lowercase letter, and one number", 
+                "PASSWORD_WEAK"
+            );
+        }
+        
+        return ValidationResult.success();
+    }
+    
+    /**
+     * Validates password confirmation
+     */
+    public static ValidationResult validatePasswordConfirmation(String password, String confirmPassword) {
+        if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            return ValidationResult.error("Please confirm your password", "CONFIRM_PASSWORD_REQUIRED");
+        }
+        
+        if (!password.equals(confirmPassword)) {
+            return ValidationResult.error("Passwords do not match", "PASSWORD_MISMATCH");
+        }
+        
+        return ValidationResult.success();
+    }
+    
+    /**
+     * Sanitizes input string to prevent XSS
+     */
+    public static String sanitizeInput(String input) {
+        if (input == null) {
+            return "";
+        }
+        
+        return input.trim()
+                   .replaceAll("<", "&lt;")
+                   .replaceAll(">", "&gt;")
+                   .replaceAll("\"", "&quot;")
+                   .replaceAll("'", "&#x27;")
+                   .replaceAll("&", "&amp;");
+    }
+    
+    /**
+     * Checks if string contains only safe characters
+     */
+    public static boolean isSafeString(String input) {
+        if (input == null) {
+            return false;
+        }
+        
+        // Allow letters, numbers, spaces, and common punctuation
+        return input.matches("^[a-zA-Z0-9\\s\\-_.@!?#$%&*()+=:;,\\/]+$");
+    }
+}
+</file>
+
+</files>
