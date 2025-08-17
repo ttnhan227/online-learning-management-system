@@ -18,7 +18,7 @@
         <div class="container">
             <ul>
                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
-                <li><a href="#">Courses</a></li>
+                <li><a href="${pageContext.request.contextPath}/courses">Courses</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
                 <%-- Check if user is logged in --%>

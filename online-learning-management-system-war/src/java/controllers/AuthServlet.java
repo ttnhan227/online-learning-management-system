@@ -3,6 +3,7 @@ package controllers;
 import beans.AuthenticationSBLocal;
 import entities.AppUser;
 import jakarta.ejb.EJB;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -89,6 +90,17 @@ public class AuthServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
+            session.setAttribute("currentUser", user); // Add this line for compatibility
+            
+            // Add role information to session
+            boolean hasInstructorRole = authBean.hasRole(user.getUserId(), "instructor");
+            boolean hasAdminRole = authBean.hasRole(user.getUserId(), "admin");
+            boolean hasStudentRole = authBean.hasRole(user.getUserId(), "student");
+            
+            session.setAttribute("userHasInstructorRole", hasInstructorRole);
+            session.setAttribute("userHasAdminRole", hasAdminRole);
+            session.setAttribute("userHasStudentRole", hasStudentRole);
+            
             session.setMaxInactiveInterval(30 * 60);
             response.sendRedirect(request.getContextPath() + "/HomeServlet");
         } else {
