@@ -13,7 +13,10 @@
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>controllers.HomeServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>EnrollmentServlet</servlet-name>
+        <servlet-class>controllers.EnrollmentServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/HomeServlet</url-pattern>
@@ -25,5 +28,9 @@
     <servlet-mapping>
         <servlet-name>AuthServlet</servlet-name>
         <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EnrollmentServlet</servlet-name>
+        <url-pattern>/EnrollmentServlet</url-pattern>
     </servlet-mapping>
 </web-app>

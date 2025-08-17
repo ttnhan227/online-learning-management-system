@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,9 +19,14 @@
         <div class="container">
             <ul>
                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/courses">Courses</a></li>
+                <li><a href="#">Courses</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
+                        <%-- Check if user is logged in --%>
+                        <% if (session != null && session.getAttribute("user") != null) { %>
+                    <!-- Enrollment va DashBoard-->
+                    <li><a href="${pageContext.request.contextPath}/EnrollmentServlet?action=list">My Enrollments</a></li>
+                    <li><a href="${pageContext.request.contextPath}/EnrollmentServlet?action=dashboard">Dashboard</a></li>
                 <%-- Check if user is logged in --%>
                 <% if (session != null && session.getAttribute("user") != null) { %>
                     <li>
@@ -45,6 +51,16 @@
         <section class="hero">
             <h2>Unlock Your Potential</h2>
             <p>Join our community and start your journey to mastering new skills today.</p>
+
+            <!-- Truy cap nhanh Enrollment va Dashboard -->
+            <div class="hero-actions" style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+                <% if (session != null && session.getAttribute("user") != null) { %>
+                <a class="btn" href="${pageContext.request.contextPath}/EnrollmentServlet?action=list">Go to My Enrollments</a>
+                <a class="btn" href="${pageContext.request.contextPath}/EnrollmentServlet?action=dashboard">Open Dashboard</a>
+                <% } else { %>
+                <a class="btn" href="${pageContext.request.contextPath}/auth?action=Login">Login to manage enrollments</a>
+                <% }%>
+            </div>
         </section>
 
         <div class="feature-grid">
