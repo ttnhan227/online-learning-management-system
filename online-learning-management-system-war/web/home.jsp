@@ -9,57 +9,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>E-Learning</h1>
-        </div>
-    </header>
-
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
-                <li><a href="#">Courses</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                        <%-- Check if user is logged in --%>
-                        <% if (session != null && session.getAttribute("user") != null) { %>
-                    <!-- Enrollment va DashBoard-->
-                    <li><a href="${pageContext.request.contextPath}/EnrollmentServlet?action=list">My Enrollments</a></li>
-                    <li><a href="${pageContext.request.contextPath}/EnrollmentServlet?action=dashboard">Dashboard</a></li>
-                <%-- Check if user is logged in --%>
-                <% if (session != null && session.getAttribute("user") != null) { %>
-                    <li>
-                        <span>Welcome, ${sessionScope.user.fullName}</span>
-                    </li>
-                    <li>
-                        <form action="${pageContext.request.contextPath}/auth" method="POST">
-                            <input type="hidden" name="action" value="Logout">
-                            <button type="submit">Logout</button>
-                        </form>
-                    </li>
-                <% } else { %>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/auth?action=Login">Login</a>
-                    </li>
-                <% } %>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/fragments/header.jsp"/>
+    
 
     <main class="container main">
         <section class="hero">
             <h2>Unlock Your Potential</h2>
             <p>Join our community and start your journey to mastering new skills today.</p>
 
-            <!-- Truy cap nhanh Enrollment va Dashboard -->
-            <div class="hero-actions" style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-                <% if (session != null && session.getAttribute("user") != null) { %>
-                <a class="btn" href="${pageContext.request.contextPath}/EnrollmentServlet?action=list">Go to My Enrollments</a>
-                <a class="btn" href="${pageContext.request.contextPath}/EnrollmentServlet?action=dashboard">Open Dashboard</a>
-                <% } else { %>
-                <a class="btn" href="${pageContext.request.contextPath}/auth?action=Login">Login to manage enrollments</a>
-                <% }%>
             </div>
         </section>
 
@@ -82,10 +39,6 @@
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Online Learning Management System. All rights reserved.</p>
-        </div>
-    </footer>
+    <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
 </body>
 </html>

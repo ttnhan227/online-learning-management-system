@@ -2,6 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<% request.setAttribute("activePage", "courses"); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,57 +56,7 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
-                <i class="fas fa-graduation-cap me-2"></i>EduLMS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/HomeServlet">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="${pageContext.request.contextPath}/courses">Courses</a>
-                    </li>
-                    <c:if test="${not empty sessionScope.currentUser}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/instructor/dashboard">Dashboard</a>
-                        </li>
-                    </c:if>
-                </ul>
-                <ul class="navbar-nav">
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.currentUser}">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user me-1"></i>${sessionScope.currentUser.fullName}
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/auth/logout">Logout</a></li>
-                                </ul>
-                            </li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/auth/login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/auth/register">Register</a>
-                            </li>
-                        </c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <jsp:include page="/WEB-INF/fragments/header.jsp"/>
     <!-- Search Header -->
     <section class="search-header">
         <div class="container">

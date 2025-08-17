@@ -23,15 +23,6 @@ import java.util.logging.Logger;
  * Servlet controller cho quản lý khóa học
  * @author ttnha
  */
-@WebServlet(name = "CourseServlet", urlPatterns = {
-    "/courses", 
-    "/course/*", 
-    "/instructor/*",
-    "/test",
-    "/test-dashboard",
-    "/simple-test",
-    "/instructor-dashboard-test"
-})
 public class CourseServlet extends HttpServlet {
 
     @EJB
@@ -143,27 +134,29 @@ public class CourseServlet extends HttpServlet {
             return;
         }
         
-        // Handle /instructor/* patterns
+        // Handle /instructor/dashboard
+        if ("/instructor/dashboard".equals(servletPath)) {
+            System.out.println("=== INSTRUCTOR DASHBOARD ===");
+            System.out.println("Handling /instructor/dashboard");
+            instructorDashboard(request, response);
+            return;
+        }
+        
+        // Handle old /instructor/* patterns for backward compatibility
         if ("/instructor".equals(servletPath) && pathInfo != null) {
-            System.out.println("=== DEBUG INSTRUCTOR PATH ===");
+            System.out.println("=== LEGACY INSTRUCTOR PATH ===");
             System.out.println("Servlet Path: " + servletPath);
             System.out.println("Path Info: " + pathInfo);
-            System.out.println("Path Info length: " + (pathInfo != null ? pathInfo.length() : "null"));
-            System.out.println("Path Info equals '/dashboard': " + "/dashboard".equals(pathInfo));
-            System.out.println("Path Info starts with '/dashboard': " + (pathInfo != null && pathInfo.startsWith("/dashboard")));
             
-            // Handle both /dashboard and /dashboard.jsp
-            if (pathInfo.equals("/dashboard") || pathInfo.equals("/dashboard.jsp")) {
-                System.out.println("Calling instructorDashboard for path: " + pathInfo);
-                System.out.println("About to call instructorDashboard method...");
-                instructorDashboard(request, response);
-                System.out.println("instructorDashboard method completed");
+            // Redirect to the new URL pattern
+            if ("/dashboard".equals(pathInfo) || "/dashboard.jsp".equals(pathInfo)) {
+                System.out.println("Redirecting to new URL pattern");
+                response.sendRedirect(request.getContextPath() + "/instructor/dashboard");
                 return;
             }
             
-            // Handle other instructor paths
-            System.out.println("Unknown instructor path, redirecting to courses");
-            System.out.println("Path Info was: '" + pathInfo + "'");
+            // Handle other legacy paths
+            System.out.println("Unknown legacy path, redirecting to courses");
             response.sendRedirect(request.getContextPath() + "/courses");
             return;
         }
@@ -208,27 +201,39 @@ public class CourseServlet extends HttpServlet {
     private void listCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Debug: Check session
+        // Check if user is logged in
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            // Store the requested URL for redirecting after login
+            String requestedUrl = request.getRequestURL().toString();
+            String queryString = request.getQueryString();
+            if (queryString != null) {
+                requestedUrl += "?" + queryString;
+            }
+            session = request.getSession(true);
+            session.setAttribute("redirectAfterLogin", requestedUrl);
+            
+            // Redirect to login page
+            response.sendRedirect(request.getContextPath() + "/auth?action=Login");
+            return;
+        }
+        
+        // Debug: Check session
         System.out.println("=== DEBUG SESSION ===");
         System.out.println("Session exists: " + (session != null));
-        if (session != null) {
-            System.out.println("Session ID: " + session.getId());
-            AppUser user = (AppUser) session.getAttribute("user");
-            AppUser currentUser = (AppUser) session.getAttribute("currentUser");
-            System.out.println("Session user: " + (user != null ? user.getFullName() + " (ID: " + user.getUserId() + ")" : "null"));
-            System.out.println("Session currentUser: " + (currentUser != null ? currentUser.getFullName() + " (ID: " + currentUser.getUserId() + ")" : "null"));
-            
-            // List all session attributes
-            java.util.Enumeration<String> attributeNames = session.getAttributeNames();
-            System.out.println("All session attributes:");
-            while (attributeNames.hasMoreElements()) {
-                String name = attributeNames.nextElement();
-                Object value = session.getAttribute(name);
-                System.out.println("  " + name + " = " + (value != null ? value.toString() : "null"));
-            }
-        } else {
-            System.out.println("No session found");
+        System.out.println("Session ID: " + session.getId());
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUser currentUser = getCurrentUser(request);
+        System.out.println("Session user: " + (user != null ? user.getFullName() + " (ID: " + user.getUserId() + ")" : "null"));
+        System.out.println("Session currentUser: " + (currentUser != null ? currentUser.getFullName() + " (ID: " + currentUser.getUserId() + ")" : "null"));
+        
+        // List all session attributes
+        java.util.Enumeration<String> attributeNames = session.getAttributeNames();
+        System.out.println("All session attributes:");
+        while (attributeNames.hasMoreElements()) {
+            String name = attributeNames.nextElement();
+            Object value = session.getAttribute(name);
+            System.out.println("  " + name + " = " + (value != null ? value.toString() : "null"));
         }
         System.out.println("=== END DEBUG SESSION ===");
         
@@ -245,18 +250,25 @@ public class CourseServlet extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalCourses", totalCourses);
         
-        // Add role information for JSP
-        if (session != null) {
-            AppUser currentUser = getCurrentUser(request);
-            if (currentUser != null) {
-                boolean hasInstructorRole = isInstructor(currentUser);
-                boolean hasAdminRole = isAdmin(currentUser);
-                boolean hasStudentRole = isStudent(currentUser);
-                
-                request.setAttribute("userHasInstructorRole", hasInstructorRole);
-                request.setAttribute("userHasAdminRole", hasAdminRole);
-                request.setAttribute("userHasStudentRole", hasStudentRole);
+        // Check if user has proper role (admin or instructor)
+        if (currentUser != null) {
+            boolean hasInstructorRole = isInstructor(currentUser);
+            boolean hasAdminRole = isAdmin(currentUser);
+            boolean hasStudentRole = isStudent(currentUser);
+            
+            request.setAttribute("userHasInstructorRole", hasInstructorRole);
+            request.setAttribute("userHasAdminRole", hasAdminRole);
+            request.setAttribute("userHasStudentRole", hasStudentRole);
+            
+            // If user doesn't have any of the required roles, redirect to home
+            if (!hasInstructorRole && !hasAdminRole && !hasStudentRole) {
+                response.sendRedirect(request.getContextPath() + "/HomeServlet");
+                return;
             }
+        } else {
+            // This should not happen as we already check authentication at the start
+            response.sendRedirect(request.getContextPath() + "/auth?action=Login");
+            return;
         }
         
         request.getRequestDispatcher("/courses/course-list.jsp").forward(request, response);
@@ -596,6 +608,17 @@ public class CourseServlet extends HttpServlet {
     private void instructorDashboard(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // Prevent infinite loops by checking for a request attribute
+        if (request.getAttribute("instructorDashboardVisited") != null) {
+            System.out.println("Detected potential infinite loop in instructorDashboard");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Error: Circular reference detected in instructor dashboard");
+            return;
+        }
+        
+        // Mark this request as visited
+        request.setAttribute("instructorDashboardVisited", true);
+        
         System.out.println("=== DEBUG INSTRUCTOR DASHBOARD ===");
         System.out.println("Method instructorDashboard called successfully!");
         
@@ -640,18 +663,21 @@ public class CourseServlet extends HttpServlet {
             request.setAttribute("isAdmin", hasAdminRole);
             request.setAttribute("isInstructor", hasInstructorRole);
             
-            System.out.println("About to forward to /WEB-INF/instructor/dashboard.jsp");
+            System.out.println("About to forward to /instructor/dashboard.jsp");
             System.out.println("Request context path: " + request.getContextPath());
             System.out.println("Full request URI: " + request.getRequestURI());
             
-            request.getRequestDispatcher("/WEB-INF/instructor/dashboard.jsp").forward(request, response);
+            // Forward to the dashboard JSP
+            request.getRequestDispatcher("/instructor/dashboard.jsp").forward(request, response);
             System.out.println("Forward completed successfully");
             
         } catch (Exception e) {
             System.out.println("Error in instructorDashboard: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Error loading dashboard: " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            // Instead of forwarding to error.jsp, send a simple error response
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Error loading dashboard: " + e.getMessage());
+            return;
         }
         
         System.out.println("=== END DEBUG INSTRUCTOR DASHBOARD ===");

@@ -33,4 +33,37 @@
         <servlet-name>EnrollmentServlet</servlet-name>
         <url-pattern>/EnrollmentServlet</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CourseServlet</servlet-name>
+        <servlet-class>controllers.CourseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/courses</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/course/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/instructor/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/test-dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/simple-test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CourseServlet</servlet-name>
+        <url-pattern>/instructor-dashboard-test</url-pattern>
+    </servlet-mapping>
 </web-app>

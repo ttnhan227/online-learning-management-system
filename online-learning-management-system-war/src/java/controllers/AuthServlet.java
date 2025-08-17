@@ -100,9 +100,19 @@ public class AuthServlet extends HttpServlet {
             session.setAttribute("userHasInstructorRole", hasInstructorRole);
             session.setAttribute("userHasAdminRole", hasAdminRole);
             session.setAttribute("userHasStudentRole", hasStudentRole);
-            
+        
             session.setMaxInactiveInterval(30 * 60);
-            response.sendRedirect(request.getContextPath() + "/HomeServlet");
+        
+            // Check if there's a redirect URL in session
+            String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+            if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                // Remove the redirect URL from session to avoid future redirects
+                session.removeAttribute("redirectAfterLogin");
+                response.sendRedirect(redirectUrl);
+            } else {
+                // Default redirect to home if no specific redirect URL is set
+                response.sendRedirect(request.getContextPath() + "/HomeServlet");
+            }
         } else {
             request.setAttribute("error", "Invalid email or password. Please check your credentials and try again.");
             request.getRequestDispatcher("auth/login.jsp").forward(request, response);

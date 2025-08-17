@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
-    <a href="${pageContext.request.contextPath}/HomeServlet" class="back-to-home">← Back to Home</a>
+    <jsp:include page="/WEB-INF/fragments/header.jsp"/>
     <div class="auth-container">
         <h2>Create an Account</h2>
         
@@ -195,5 +195,6 @@
             errorSpans.forEach(span => span.textContent = '');
         }
     </script>
+    <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
 </body>
 </html>

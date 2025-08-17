@@ -6,10 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Online Learning Management System</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+    </style>
 </head>
 <body>
-    <a href="${pageContext.request.contextPath}/HomeServlet" class="back-to-home">← Back to Home</a>
-    <div class="auth-container">
+    <jsp:include page="/WEB-INF/fragments/header.jsp"/>
+    <main class="main-content">
+        <div class="auth-container">
         <h2>Login to Your Account</h2>
         
         <%-- Display error message if login failed --%>
@@ -44,8 +65,10 @@
         <div class="auth-link">
             <p>Don't have an account? <a href="${pageContext.request.contextPath}/auth?action=Register">Register here</a></p>
         </div>
-    </div>
-    
+        </div>
+    </main>
+    <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Client-side validation for login form
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -82,19 +105,15 @@
             return emailRegex.test(email);
         }
         
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const errorSpan = document.getElementById(fieldId + 'Error');
-            
-            field.classList.add('error');
-            errorSpan.textContent = message;
+        function showError(field, message) {
+            const errorSpan = document.getElementById(field + 'Error');
+            if (errorSpan) {
+                errorSpan.textContent = message;
+            }
         }
         
         function clearErrors() {
-            const inputs = document.querySelectorAll('input');
             const errorSpans = document.querySelectorAll('.error-text');
-            
-            inputs.forEach(input => input.classList.remove('error'));
             errorSpans.forEach(span => span.textContent = '');
         }
     </script>

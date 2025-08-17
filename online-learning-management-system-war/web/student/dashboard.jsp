@@ -8,11 +8,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Student Dashboard</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Dashboard - Online Learning Management System</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <style>
             body {
-                font-family: system-ui, Arial, sans-serif;
-                margin: 24px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f8f9fa;
             }
             .grid {
                 display: grid;
@@ -75,6 +80,8 @@
         </style>
     </head>
     <body>
+        <jsp:include page="/WEB-INF/fragments/header.jsp"/>
+        <main class="container main">
         <div class="header">
             <h2 style="margin:0;">Student Dashboard</h2>
             <a class="btn" href="${pageContext.request.contextPath}/EnrollmentServlet?action=list">Back to Enrollments</a>
@@ -112,5 +119,7 @@
         <c:if test="${empty enrollments}">
             <p><em>No enrollments yet. Browse the <a href="${pageContext.request.contextPath}/course/list.jsp">course catalog</a>.</em></p>
         </c:if>
+        </main>
+        <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
     </body>
 </html>
