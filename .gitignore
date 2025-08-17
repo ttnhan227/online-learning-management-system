@@ -29,3 +29,6 @@ replay_pid*
 =======
 /dist/
 >>>>>>> Stashed changes
+/online-learning-management-system-war/build/
+/build/
+nbproject/private/private.properties
