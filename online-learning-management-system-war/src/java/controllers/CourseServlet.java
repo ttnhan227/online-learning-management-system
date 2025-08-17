@@ -27,7 +27,10 @@ import java.util.logging.Logger;
     "/courses", 
     "/course/*", 
     "/instructor/*",
-    "/test"
+    "/test",
+    "/test-dashboard",
+    "/simple-test",
+    "/instructor-dashboard-test"
 })
 public class CourseServlet extends HttpServlet {
 
@@ -92,8 +95,17 @@ public class CourseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        System.out.println("=== DEBUG DOGET ===");
+        System.out.println("Request URI: " + request.getRequestURI());
+        System.out.println("Request URL: " + request.getRequestURL());
+        System.out.println("Context Path: " + request.getContextPath());
+        
         String servletPath = request.getServletPath();
         String pathInfo = request.getPathInfo();
+        
+        System.out.println("Servlet Path: " + servletPath);
+        System.out.println("Path Info: " + pathInfo);
+        System.out.println("=== END DEBUG DOGET ===");
         
         // Handle /courses
         if ("/courses".equals(servletPath)) {
@@ -106,6 +118,8 @@ public class CourseServlet extends HttpServlet {
             testConnection(request, response);
             return;
         }
+        
+     
         
         // Handle /course/* patterns
         if ("/course".equals(servletPath) && pathInfo != null) {
@@ -134,17 +148,23 @@ public class CourseServlet extends HttpServlet {
             System.out.println("=== DEBUG INSTRUCTOR PATH ===");
             System.out.println("Servlet Path: " + servletPath);
             System.out.println("Path Info: " + pathInfo);
+            System.out.println("Path Info length: " + (pathInfo != null ? pathInfo.length() : "null"));
+            System.out.println("Path Info equals '/dashboard': " + "/dashboard".equals(pathInfo));
+            System.out.println("Path Info starts with '/dashboard': " + (pathInfo != null && pathInfo.startsWith("/dashboard")));
             
-            switch (pathInfo) {
-                case "/dashboard":
-                    System.out.println("Calling instructorDashboard");
-                    instructorDashboard(request, response);
-                    break;
-                default:
-                    System.out.println("Unknown instructor path, redirecting to courses");
-                    response.sendRedirect(request.getContextPath() + "/courses");
-                    break;
+            // Handle both /dashboard and /dashboard.jsp
+            if (pathInfo.equals("/dashboard") || pathInfo.equals("/dashboard.jsp")) {
+                System.out.println("Calling instructorDashboard for path: " + pathInfo);
+                System.out.println("About to call instructorDashboard method...");
+                instructorDashboard(request, response);
+                System.out.println("instructorDashboard method completed");
+                return;
             }
+            
+            // Handle other instructor paths
+            System.out.println("Unknown instructor path, redirecting to courses");
+            System.out.println("Path Info was: '" + pathInfo + "'");
+            response.sendRedirect(request.getContextPath() + "/courses");
             return;
         }
         
@@ -541,20 +561,32 @@ public class CourseServlet extends HttpServlet {
      */
     private void searchCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         String searchTerm = request.getParameter("q");
-        
+
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/courses");
             return;
         }
-        
-        List<Course> searchResults = courseManagementSB.searchCourses(searchTerm.trim());
-        
+
+        // Read filters from query params
+        String[] categoryParams = request.getParameterValues("category");
+        String[] levelParams = request.getParameterValues("level");
+        String sortOption = request.getParameter("sort");
+
+        java.util.List<String> categories = categoryParams != null ? java.util.Arrays.asList(categoryParams) : java.util.Collections.emptyList();
+        java.util.List<String> levels = levelParams != null ? java.util.Arrays.asList(levelParams) : java.util.Collections.emptyList();
+
+        // Perform filtered search
+        List<Course> searchResults = courseManagementSB.searchCourses(searchTerm.trim(), categories, levels, sortOption);
+
+        // Attributes for JSP
         request.setAttribute("courses", searchResults);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("resultCount", searchResults.size());
-        
+        request.setAttribute("sortOption", sortOption != null ? sortOption : "latest");
+        request.setAttribute("selectedCategories", String.join(",", categories));
+        request.setAttribute("selectedLevels", String.join(",", levels));
+
         request.getRequestDispatcher("/courses/course-search.jsp").forward(request, response);
     }
 
@@ -565,6 +597,7 @@ public class CourseServlet extends HttpServlet {
             throws ServletException, IOException {
         
         System.out.println("=== DEBUG INSTRUCTOR DASHBOARD ===");
+        System.out.println("Method instructorDashboard called successfully!");
         
         AppUser currentUser = getCurrentUser(request);
         System.out.println("Current user: " + (currentUser != null ? currentUser.getFullName() + " (ID: " + currentUser.getUserId() + ")" : "null"));
@@ -589,6 +622,8 @@ public class CourseServlet extends HttpServlet {
             return;
         }
         
+        System.out.println("User has proper role, proceeding to load dashboard data...");
+        
         try {
             System.out.println("Calling getCoursesByInstructor for user ID: " + currentUser.getUserId());
             List<Course> instructorCourses = courseManagementSB.getCoursesByInstructor(currentUser.getUserId());
@@ -603,9 +638,14 @@ public class CourseServlet extends HttpServlet {
             request.setAttribute("courses", instructorCourses);
             request.setAttribute("courseCount", instructorCourses != null ? instructorCourses.size() : 0);
             request.setAttribute("isAdmin", hasAdminRole);
+            request.setAttribute("isInstructor", hasInstructorRole);
             
-            System.out.println("Forwarding to /instructor/dashboard.jsp");
-            request.getRequestDispatcher("/instructor/dashboard.jsp").forward(request, response);
+            System.out.println("About to forward to /WEB-INF/instructor/dashboard.jsp");
+            System.out.println("Request context path: " + request.getContextPath());
+            System.out.println("Full request URI: " + request.getRequestURI());
+            
+            request.getRequestDispatcher("/WEB-INF/instructor/dashboard.jsp").forward(request, response);
+            System.out.println("Forward completed successfully");
             
         } catch (Exception e) {
             System.out.println("Error in instructorDashboard: " + e.getMessage());
@@ -688,5 +728,40 @@ public class CourseServlet extends HttpServlet {
             response.getWriter().println("</body></html>");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Test dashboard endpoint
+     */
+    private void testDashboard(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h2>Dashboard Test Endpoint</h2>");
+        response.getWriter().println("<p>This endpoint is designed to test if the servlet is receiving the dashboard request.</p>");
+        response.getWriter().println("<p>If you see this message, it means the servlet successfully received the request.</p>");
+        response.getWriter().println("</body></html>");
+    }
+
+    /**
+     * Simple test endpoint
+     */
+    private void simpleTest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h2>Simple Test Endpoint</h2>");
+        response.getWriter().println("<p>This endpoint is designed to test if the servlet is receiving the simple test request.</p>");
+        response.getWriter().println("<p>If you see this message, it means the servlet successfully received the request.</p>");
+        response.getWriter().println("</body></html>");
+    }
+    
+    /**
+     * Instructor dashboard test endpoint
+     */
+    private void instructorDashboardTest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("=== INSTRUCTOR DASHBOARD TEST ===");
+        instructorDashboard(request, response);
     }
 }

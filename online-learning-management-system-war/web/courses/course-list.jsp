@@ -76,7 +76,8 @@
                     <c:if test="${not empty sessionScope.currentUser}">
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/instructor/dashboard">Dashboard</a>
-                        </li>
+                        <!--<a class="nav-link active" href="#">Dashboard</a>-->
+                    </li>
                     </c:if>
                 </ul>
                 <ul class="navbar-nav">

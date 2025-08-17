@@ -222,6 +222,86 @@ public class CourseManagementSB implements CourseManagementSBLocal {
         }
     }
 
+    /**
+     * Tìm kiếm khóa học với bộ lọc và sắp xếp.
+     * Vì entity hiện không có trường category/level, ta lọc dựa trên từ khóa xuất hiện trong title/description.
+     */
+    public List<Course> searchCourses(String searchTerm, java.util.List<String> categories, java.util.List<String> levels, String sortOption) {
+        try {
+            em.getTransaction().begin();
+
+            StringBuilder jpql = new StringBuilder("SELECT c FROM Course c WHERE 1=1");
+
+            // Base keyword search on title/description
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                jpql.append(" AND (LOWER(c.title) LIKE LOWER(:kw) OR LOWER(c.description) LIKE LOWER(:kw))");
+            }
+
+            // Category filters mapped to keywords in title/description
+            if (categories != null && !categories.isEmpty()) {
+                jpql.append(" AND (");
+                for (int i = 0; i < categories.size(); i++) {
+                    if (i > 0) jpql.append(" OR ");
+                    jpql.append(" LOWER(c.title) LIKE LOWER(:cat" + i + ") OR LOWER(c.description) LIKE LOWER(:cat" + i + ")");
+                }
+                jpql.append(")");
+            }
+
+            // Level filters mapped to keywords in title/description
+            if (levels != null && !levels.isEmpty()) {
+                jpql.append(" AND (");
+                for (int i = 0; i < levels.size(); i++) {
+                    if (i > 0) jpql.append(" OR ");
+                    jpql.append(" LOWER(c.title) LIKE LOWER(:lvl" + i + ") OR LOWER(c.description) LIKE LOWER(:lvl" + i + ")");
+                }
+                jpql.append(")");
+            }
+
+            // Sorting
+            String sort = (sortOption != null) ? sortOption.toLowerCase() : "latest";
+            switch (sort) {
+                case "oldest":
+                    jpql.append(" ORDER BY c.createdAt ASC");
+                    break;
+                case "az":
+                    jpql.append(" ORDER BY c.title ASC");
+                    break;
+                case "za":
+                    jpql.append(" ORDER BY c.title DESC");
+                    break;
+                case "latest":
+                default:
+                    jpql.append(" ORDER BY c.createdAt DESC");
+                    break;
+            }
+
+            TypedQuery<Course> query = em.createQuery(jpql.toString(), Course.class);
+
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                query.setParameter("kw", "%" + searchTerm.trim() + "%");
+            }
+            if (categories != null) {
+                for (int i = 0; i < categories.size(); i++) {
+                    query.setParameter("cat" + i, "%" + categories.get(i).trim() + "%");
+                }
+            }
+            if (levels != null) {
+                for (int i = 0; i < levels.size(); i++) {
+                    query.setParameter("lvl" + i, "%" + levels.get(i).trim() + "%");
+                }
+            }
+
+            List<Course> courses = query.getResultList();
+            em.getTransaction().commit();
+            return courses;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        }
+    }
+
     
     public List<Course> getCoursesWithPagination(int page, int pageSize) {
         try {

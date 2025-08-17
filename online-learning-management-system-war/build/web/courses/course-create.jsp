@@ -49,7 +49,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/HomeServlet">
                 <i class="fas fa-graduation-cap me-2"></i>EduLMS
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,33 +138,38 @@
         <div class="row">
             <!-- Filters Sidebar -->
             <div class="col-lg-3">
-                <div class="filter-card">
+                <form action="${pageContext.request.contextPath}/course/search" method="GET" class="filter-card">
                     <h5><i class="fas fa-filter me-2 text-primary"></i>Filters</h5>
                     <hr>
+                    <input type="hidden" name="q" value="${searchTerm}" />
                     
                     <!-- Category Filter -->
                     <div class="mb-3">
                         <label class="form-label"><strong>Category</strong></label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterProgramming">
+                            <input class="form-check-input" type="checkbox" id="filterProgramming" name="category" value="programming"
+                                   <c:if test="${not empty selectedCategories and fn:contains(selectedCategories, 'programming')}">checked</c:if>>
                             <label class="form-check-label" for="filterProgramming">
                                 Programming
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterDesign">
+                            <input class="form-check-input" type="checkbox" id="filterDesign" name="category" value="design"
+                                   <c:if test="${not empty selectedCategories and fn:contains(selectedCategories, 'design')}">checked</c:if>>
                             <label class="form-check-label" for="filterDesign">
                                 Design
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterBusiness">
+                            <input class="form-check-input" type="checkbox" id="filterBusiness" name="category" value="business"
+                                   <c:if test="${not empty selectedCategories and fn:contains(selectedCategories, 'business')}">checked</c:if>>
                             <label class="form-check-label" for="filterBusiness">
                                 Business
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterLanguage">
+                            <input class="form-check-input" type="checkbox" id="filterLanguage" name="category" value="language"
+                                   <c:if test="${not empty selectedCategories and fn:contains(selectedCategories, 'language')}">checked</c:if>>
                             <label class="form-check-label" for="filterLanguage">
                                 Language
                             </label>
@@ -174,30 +180,48 @@
                     <div class="mb-3">
                         <label class="form-label"><strong>Level</strong></label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterBeginner">
+                            <input class="form-check-input" type="checkbox" id="filterBeginner" name="level" value="beginner"
+                                   <c:if test="${not empty selectedLevels and fn:contains(selectedLevels, 'beginner')}">checked</c:if>>
                             <label class="form-check-label" for="filterBeginner">
                                 Beginner
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterIntermediate">
+                            <input class="form-check-input" type="checkbox" id="filterIntermediate" name="level" value="intermediate"
+                                   <c:if test="${not empty selectedLevels and fn:contains(selectedLevels, 'intermediate')}">checked</c:if>>
                             <label class="form-check-label" for="filterIntermediate">
                                 Intermediate
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="filterAdvanced">
+                            <input class="form-check-input" type="checkbox" id="filterAdvanced" name="level" value="advanced"
+                                   <c:if test="${not empty selectedLevels and fn:contains(selectedLevels, 'advanced')}">checked</c:if>>
                             <label class="form-check-label" for="filterAdvanced">
                                 Advanced
                             </label>
                         </div>
                     </div>
 
-                    <!-- Clear Filters -->
-                    <button class="btn btn-outline-secondary btn-sm w-100" onclick="clearFilters()">
-                        <i class="fas fa-times me-1"></i>Clear Filters
-                    </button>
-                </div>
+                    <!-- Sort -->
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Sort by</strong></label>
+                        <select class="form-select" name="sort">
+                            <option value="latest" <c:if test="${sortOption == 'latest'}">selected</c:if>>Latest</option>
+                            <option value="oldest" <c:if test="${sortOption == 'oldest'}">selected</c:if>>Oldest</option>
+                            <option value="az" <c:if test="${sortOption == 'az'}">selected</c:if>>A-Z</option>
+                            <option value="za" <c:if test="${sortOption == 'za'}">selected</c:if>>Z-A</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fas fa-filter me-1"></i>Apply Filters
+                        </button>
+                        <a href="${pageContext.request.contextPath}/course/search?q=${searchTerm}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-times me-1"></i>Clear Filters
+                        </a>
+                    </div>
+                </form>
 
                 <!-- Search Tips -->
                 <div class="filter-card">
@@ -221,13 +245,22 @@
                         </p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <label class="form-label me-2 mb-0">Sort by:</label>
-                        <select class="form-select form-select-sm" style="width: auto;">
-                            <option>Latest</option>
-                            <option>Oldest</option>
-                            <option>A-Z</option>
-                            <option>Z-A</option>
-                        </select>
+                        <form action="${pageContext.request.contextPath}/course/search" method="GET" class="d-flex align-items-center">
+                            <input type="hidden" name="q" value="${searchTerm}" />
+                            <c:forEach var="cat" items="${fn:split(selectedCategories, ',')}">
+                                <c:if test="${not empty cat}"><input type="hidden" name="category" value="${cat}" /></c:if>
+                            </c:forEach>
+                            <c:forEach var="lvl" items="${fn:split(selectedLevels, ',')}">
+                                <c:if test="${not empty lvl}"><input type="hidden" name="level" value="${lvl}" /></c:if>
+                            </c:forEach>
+                            <label class="form-label me-2 mb-0">Sort by:</label>
+                            <select class="form-select form-select-sm" style="width: auto;" name="sort" onchange="this.form.submit()">
+                                <option value="latest" <c:if test="${sortOption == 'latest'}">selected</c:if>>Latest</option>
+                                <option value="oldest" <c:if test="${sortOption == 'oldest'}">selected</c:if>>Oldest</option>
+                                <option value="az" <c:if test="${sortOption == 'az'}">selected</c:if>>A-Z</option>
+                                <option value="za" <c:if test="${sortOption == 'za'}">selected</c:if>>Z-A</option>
+                            </select>
+                        </form>
                     </div>
                 </div>
 

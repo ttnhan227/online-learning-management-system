@@ -54,6 +54,15 @@ public interface CourseManagementSBLocal {
      * Tìm kiếm khóa học tổng hợp (tiêu đề + mô tả)
      */
     List<Course> searchCourses(String searchTerm);
+
+    /**
+     * Tìm kiếm khóa học với bộ lọc và sắp xếp
+     * @param searchTerm từ khóa tìm kiếm áp dụng cho title hoặc description
+     * @param categories danh sách category (ví dụ: programming, design, business, language)
+     * @param levels danh sách level (ví dụ: beginner, intermediate, advanced)
+     * @param sortOption tiêu chí sắp xếp: latest, oldest, az, za
+     */
+    List<Course> searchCourses(String searchTerm, java.util.List<String> categories, java.util.List<String> levels, String sortOption);
     
     /**
      * Lấy danh sách khóa học có phân trang

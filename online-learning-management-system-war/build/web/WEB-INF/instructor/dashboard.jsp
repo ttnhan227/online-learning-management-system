@@ -70,12 +70,12 @@
             margin: 0 auto 1rem;
         }
     </style>
-</head>
+    </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/HomeServlet">
                 <i class="fas fa-graduation-cap me-2"></i>EduLMS
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -84,13 +84,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/HomeServlet">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/courses">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="${pageContext.request.contextPath}/instructor/dashboard">Dashboard</a>
+                        <a class="nav-link active" href="javascript:void(0);">Dashboard</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -252,7 +252,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button class="btn btn-outline-danger btn-sm" 
-                                                onclick="confirmDelete(${course.courseId}, '${course.title}')">
+                                                onclick="confirmDelete(${course.courseId}, &quot;${course.title}&quot;)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -407,3 +407,5 @@
     </script>
 </body>
 </html>
+
+
