@@ -5,18 +5,17 @@
         <data xmlns="http://www.netbeans.org/ns/web-project/3">
             <name>online-learning-management-system-war</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <explicit-platform explicit-source-supported="true"/>
             <web-module-libraries>
                 <library dirs="100">
                     <file>${reference.online-learning-management-system-ejb.dist}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.jakarta.servlet-api-6.0.0.jar}</file>
+                    <file>${file.reference.jakarta.ejb-api-4.0.1.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.jakarta.ejb-api-4.0.1.jar}</file>
+                    <file>${file.reference.jakarta.servlet-api-6.0.0.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
