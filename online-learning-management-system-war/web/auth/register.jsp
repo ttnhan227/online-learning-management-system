@@ -66,74 +66,66 @@
     </div>
     
     <script>
-        // Enhanced client-side validation for registration form
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const role = document.getElementById('role').value;
+        // Add input event listeners for real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const fields = ['fullName', 'email', 'password', 'confirmPassword'];
             
-            // Clear previous errors
-            clearErrors();
+            // Add input event listeners to all fields
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.addEventListener('input', validateField);
+                }
+            });
             
-            let isValid = true;
+            // Also validate on form submit
+            form.addEventListener('submit', function(e) {
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const role = document.getElementById('role').value;
+                
+                // Clear previous errors
+                clearErrors();
+                
+                let isValid = true;
             
-            // Validate full name
-            if (!fullName) {
-                showError('fullName', 'Full name is required');
-                isValid = false;
-            } else if (fullName.length < 2) {
-                showError('fullName', 'Full name must be at least 2 characters long');
-                isValid = false;
-            } else if (fullName.length > 50) {
-                showError('fullName', 'Full name cannot exceed 50 characters');
-                isValid = false;
-            } else if (!/^[a-zA-Z\s\-']+$/.test(fullName)) {
-                showError('fullName', 'Full name can only contain letters, spaces, hyphens, and apostrophes');
-                isValid = false;
-            }
-            
-            // Validate email
-            if (!email) {
-                showError('email', 'Email is required');
-                isValid = false;
-            } else if (!isValidEmail(email)) {
-                showError('email', 'Please enter a valid email address');
-                isValid = false;
-            }
-            
-            // Validate password
-            if (!password) {
-                showError('password', 'Password is required');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('password', 'Password must be at least 6 characters long');
-                isValid = false;
-            } else if (!isStrongPassword(password)) {
-                showError('password', 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
-                isValid = false;
-            }
-            
-            // Validate password confirmation
-            if (!confirmPassword) {
-                showError('confirmPassword', 'Please confirm your password');
-                isValid = false;
-            } else if (password !== confirmPassword) {
-                showError('confirmPassword', 'Passwords do not match');
-                isValid = false;
-            }
-            
-            // Validate role
-            if (!role) {
-                showError('role', 'Please select a role');
-                isValid = false;
-            }
-            
-            if (!isValid) {
-                e.preventDefault();
-            }
+                // Validate all fields
+                ['fullName', 'email', 'password', 'confirmPassword'].forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        const fakeEvent = { target: field };
+                        validateField(fakeEvent);
+                        if (document.getElementById(fieldId + 'Error').textContent) {
+                            isValid = false;
+                        }
+                    }
+                });
+                
+                // Validate role
+                if (!role) {
+                    showError('role', 'Please select a role');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
         });
+        
+        // Email validation helper
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Password strength validation
+        function isStrongPassword(password) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+        }
         
         // Real-time password strength indicator
         document.getElementById('password').addEventListener('input', function() {
@@ -179,6 +171,76 @@
             return { text: 'Strong', class: 'strong' };
         }
         
+        // Validate a single field
+        function validateField(e) {
+            const field = e ? e.target : null;
+            if (!field) return;
+            
+            const fieldId = field.id;
+            const value = field.value.trim();
+            let error = '';
+            
+            switch(fieldId) {
+                case 'fullName':
+                    if (!value) {
+                        error = 'Full name is required';
+                    } else if (value.length < 2) {
+                        error = 'Full name must be at least 2 characters long';
+                    } else if (value.length > 50) {
+                        error = 'Full name cannot exceed 50 characters';
+                    } else if (!/^[a-zA-Z\s\-']+$/.test(value)) {
+                        error = 'Full name can only contain letters, spaces, hyphens, and apostrophes';
+                    }
+                    break;
+                    
+                case 'email':
+                    if (!value) {
+                        error = 'Email is required';
+                    } else if (!isValidEmail(value)) {
+                        error = 'Please enter a valid email address';
+                    }
+                    break;
+                    
+                case 'password':
+                    if (!value) {
+                        error = 'Password is required';
+                    } else if (value.length < 8) {
+                        error = 'Password must be at least 8 characters long';
+                    } else if (!isStrongPassword(value)) {
+                        error = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
+                    }
+                    break;
+                    
+                case 'confirmPassword':
+                    const password = document.getElementById('password').value;
+                    if (!value) {
+                        error = 'Please confirm your password';
+                    } else if (value !== password) {
+                        error = 'Passwords do not match';
+                    }
+                    break;
+            }
+            
+            // Show/hide error
+            const errorSpan = document.getElementById(fieldId + 'Error');
+            if (error) {
+                field.classList.add('error');
+                errorSpan.textContent = error;
+            } else {
+                field.classList.remove('error');
+                errorSpan.textContent = '';
+            }
+            
+            // Special case for confirm password to re-validate when password changes
+            if (fieldId === 'password') {
+                const confirmPwd = document.getElementById('confirmPassword');
+                if (confirmPwd.value) {
+                    validateField({ target: confirmPwd });
+                }
+            }
+        }
+        
+        // Show error for a field
         function showError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const errorSpan = document.getElementById(fieldId + 'Error');
@@ -187,12 +249,13 @@
             errorSpan.textContent = message;
         }
         
+        // Clear all errors
         function clearErrors() {
-            const inputs = document.querySelectorAll('input, select');
             const errorSpans = document.querySelectorAll('.error-text');
+            const errorInputs = document.querySelectorAll('.error');
             
-            inputs.forEach(input => input.classList.remove('error'));
             errorSpans.forEach(span => span.textContent = '');
+            errorInputs.forEach(input => input.classList.remove('error'));
         }
     </script>
     <jsp:include page="/WEB-INF/fragments/footer.jsp"/>

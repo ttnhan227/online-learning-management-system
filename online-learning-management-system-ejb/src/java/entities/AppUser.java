@@ -51,6 +51,21 @@ public class AppUser implements Serializable {
     @Basic(optional = false)
     @Column(name = "password_hash")
     private String passwordHash;
+    @Column(name = "photo_url")
+    private String photoUrl;
+    
+    @Column(name = "is_approved")
+    private Boolean isApproved = false;
+    
+    @Column(name = "verification_document")
+    private String verificationDocument;
+    
+    @Column(name = "department", length = 100)
+    private String department;
+    
+    @Column(name = "bio", columnDefinition = "TEXT")
+    private String bio;
+    
     @Basic(optional = false)
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -75,6 +90,7 @@ public class AppUser implements Serializable {
         this.email = email;
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
+        this.isApproved = false;
     }
 
     public Integer getUserId() {
@@ -115,6 +131,46 @@ public class AppUser implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+    
+    public Boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(Boolean isApproved) {
+        this.isApproved = isApproved;
+    }
+
+    public String getVerificationDocument() {
+        return verificationDocument;
+    }
+
+    public void setVerificationDocument(String verificationDocument) {
+        this.verificationDocument = verificationDocument;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     // User roles are managed through the UserRole entity

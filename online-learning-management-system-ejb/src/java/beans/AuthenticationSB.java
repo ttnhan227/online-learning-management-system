@@ -153,6 +153,9 @@ public class AuthenticationSB implements AuthenticationSBLocal {
     @Override
     public AppUser login(String email, String password) {
         try {
+            // Clear the EntityManager cache to ensure fresh data is fetched from the database
+            em.clear();
+            
             // Sanitize email input
             String sanitizedEmail = ValidationUtils.sanitizeInput(email);
             

@@ -25,6 +25,21 @@ public class CourseManagementSB implements CourseManagementSBLocal {
         emf = Persistence.createEntityManagerFactory("online-learning-management-system-ejbPU");
         em = emf.createEntityManager();
     }
+    
+    @Override
+    public List<Course> getCoursesByInstructor(int instructorId) {
+        try {
+            TypedQuery<Course> query = em.createQuery(
+                "SELECT c FROM Course c WHERE c.instructorId.userId = :instructorId ORDER BY c.createdAt DESC", 
+                Course.class
+            );
+            query.setParameter("instructorId", instructorId);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error fetching courses by instructor: " + e.getMessage());
+            return null;
+        }
+    }
 
     
     public Course createCourse(String title, String description, String prerequisites, AppUser instructor) {

@@ -35,6 +35,10 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controllers.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>CourseServlet</servlet-name>
         <servlet-class>controllers.CourseServlet</servlet-class>
     </servlet>
@@ -65,5 +69,17 @@
     <servlet-mapping>
         <servlet-name>CourseServlet</servlet-name>
         <url-pattern>/instructor-dashboard-test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/profile/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/profile/change-password</url-pattern>
     </servlet-mapping>
 </web-app>

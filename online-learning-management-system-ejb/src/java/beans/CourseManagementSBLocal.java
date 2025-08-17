@@ -16,6 +16,13 @@ public interface CourseManagementSBLocal {
     Course createCourse(String title, String description, String prerequisites, AppUser instructor);
     
     /**
+     * Lấy danh sách khóa học của một giảng viên
+     * @param instructorId ID của giảng viên
+     * @return Danh sách khóa học
+     */
+    List<Course> getCoursesByInstructor(int instructorId);
+    
+    /**
      * Cập nhật thông tin khóa học
      */
     Course updateCourse(Integer courseId, String title, String description, String prerequisites);

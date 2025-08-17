@@ -89,8 +89,11 @@ public class AuthServlet extends HttpServlet {
         AppUser user = authBean.login(email, password);
         if (user != null) {
             HttpSession session = request.getSession(true);
+            // Set user object with consistent attribute name
             session.setAttribute("user", user);
-            session.setAttribute("currentUser", user); // Add this line for compatibility
+            
+            // Set user ID as a separate attribute for easy access in JSP
+            session.setAttribute("userId", user.getUserId());
             
             // Add role information to session
             boolean hasInstructorRole = authBean.hasRole(user.getUserId(), "instructor");
@@ -156,6 +159,7 @@ public class AuthServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            session.removeAttribute("user");
             session.invalidate();
         }
         response.sendRedirect(request.getContextPath() + "/HomeServlet");

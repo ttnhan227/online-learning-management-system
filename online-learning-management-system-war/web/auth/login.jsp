@@ -68,7 +68,6 @@
         </div>
     </main>
     <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Client-side validation for login form
         document.getElementById('loginForm').addEventListener('submit', function(e) {

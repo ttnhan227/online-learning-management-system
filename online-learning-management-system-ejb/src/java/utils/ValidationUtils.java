@@ -12,9 +12,9 @@ public class ValidationUtils {
         "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
     );
     
-    // Password regex pattern - requires at least 6 chars, 1 uppercase, 1 lowercase, 1 digit
+    // Password regex pattern - requires at least 8 chars, 1 uppercase, 1 lowercase, 1 digit
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
     );
     
     /**
@@ -120,8 +120,8 @@ public class ValidationUtils {
             return ValidationResult.error("Password is required", "PASSWORD_REQUIRED");
         }
         
-        if (password.length() < 6) {
-            return ValidationResult.error("Password must be at least 6 characters long", "PASSWORD_TOO_SHORT");
+        if (password.length() < 8) {
+            return ValidationResult.error("Password must be at least 8 characters long", "PASSWORD_TOO_SHORT");
         }
         
         if (password.length() > 128) {
