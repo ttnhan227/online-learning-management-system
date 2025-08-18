@@ -7,6 +7,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import java.util.Date;
@@ -89,12 +90,20 @@ public class AuthenticationSB implements AuthenticationSBLocal {
 
     @Override
     public AppUser registerUser(String fullName, String email, String password, String roleName) {
+        return registerUserInternal(fullName, email, password, roleName, null, null, null);
+    }
+    
+    @Override
+    public AppUser registerInstructor(String fullName, String email, String password, String roleName, 
+                                   String bio, String department, String verificationDocumentPath) {
+        return registerUserInternal(fullName, email, password, roleName, bio, department, verificationDocumentPath);
+    }
+    
+    private AppUser registerUserInternal(String fullName, String email, String password, String roleName,
+                                      String bio, String department, String verificationDocumentPath) {
+        EntityTransaction transaction = em.getTransaction();
         try {
-            // Test connection first
-            if (!testConnection()) {
-                System.err.println("Database connection test failed");
-                return null;
-            }
+            transaction.begin();
             
             // Sanitize inputs
             String sanitizedFullName = ValidationUtils.sanitizeInput(fullName);
@@ -102,10 +111,11 @@ public class AuthenticationSB implements AuthenticationSBLocal {
             
             // Validate registration data
             ValidationResult validationResult = ValidationUtils.validateRegistration(
-                sanitizedFullName, sanitizedEmail, password, password); // Using password as confirmPassword for now
+                sanitizedFullName, sanitizedEmail, password, password);
             
             if (!validationResult.isValid()) {
                 System.err.println("Validation failed: " + validationResult.getMessage());
+                transaction.rollback();
                 return null;
             }
             
@@ -113,6 +123,7 @@ public class AuthenticationSB implements AuthenticationSBLocal {
             TypedQuery<AppUser> query = em.createNamedQuery("AppUser.findByEmail", AppUser.class);
             query.setParameter("email", sanitizedEmail.toLowerCase());
             if (!query.getResultList().isEmpty()) {
+                transaction.rollback();
                 return null; // Email already exists
             }
             
@@ -123,25 +134,58 @@ public class AuthenticationSB implements AuthenticationSBLocal {
             newUser.setPasswordHash(PasswordHasher.hashPassword(password));
             newUser.setCreatedAt(new Date());
             
-            // Find the role
+            // Set instructor-specific fields if provided
+            if (bio != null) {
+                newUser.setBio(bio);
+            }
+            if (department != null) {
+                newUser.setDepartment(department);
+            }
+            if (verificationDocumentPath != null) {
+                newUser.setVerificationDocument(verificationDocumentPath);
+                newUser.setIsApproved(false); // New instructors need approval
+            } else {
+                newUser.setIsApproved(true); // Regular users are approved by default
+            }
+            
+            // Save the user
+            em.persist(newUser);
+            
+            // Assign role
             TypedQuery<Role> roleQuery = em.createNamedQuery("Role.findByRoleName", Role.class);
             roleQuery.setParameter("roleName", roleName);
             List<Role> roles = roleQuery.getResultList();
             
             if (roles.isEmpty()) {
+                transaction.rollback();
                 return null; // Role not found
             }
             
-            // Save the user
-            persist(newUser);
-            
-            // Assign role
             UserRole userRole = new UserRole();
             userRole.setUserId(newUser);
             userRole.setRoleId(roles.get(0));
-            persist(userRole);
+            em.persist(userRole);
             
+            transaction.commit();
             return newUser;
+            
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @Override
+    public AppUser getUserByEmail(String email) {
+        try {
+            TypedQuery<AppUser> query = em.createNamedQuery("AppUser.findByEmail", AppUser.class);
+            query.setParameter("email", email);
+            
+            List<AppUser> users = query.getResultList();
+            return users.isEmpty() ? null : users.get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

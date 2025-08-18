@@ -6,27 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Online Learning Management System</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <jsp:include page="/WEB-INF/fragments/header.jsp"/>
     <div class="auth-container">
         <h2>Create an Account</h2>
         
-        <%-- Display error message if registration failed --%>
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error-message">
-                <%= request.getAttribute("error") %>
-            </div>
-        <% } %>
+        <div class="message-container">
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <%= request.getAttribute("error") %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            
+            <% if (request.getAttribute("success") != null) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <%= request.getAttribute("success") %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+        </div>
         
-        <%-- Display success message if redirected from successful registration --%>
-        <% if (request.getAttribute("success") != null) { %>
-            <div class="success-message">
-                <%= request.getAttribute("success") %>
-            </div>
-        <% } %>
-        
-        <form action="${pageContext.request.contextPath}/auth" method="POST" id="registerForm" novalidate>
+        <form action="${pageContext.request.contextPath}/auth" method="POST" id="registerForm" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="action" value="Register">
             <div class="form-group">
                 <label for="fullName">Full Name</label>
@@ -51,11 +57,38 @@
             </div>
             <div class="form-group">
                 <label for="role">Register as</label>
-                <select id="role" name="role" required>
+                <select id="role" name="role" required onchange="toggleInstructorFields()">
                     <option value="student" selected>Student</option>
                     <option value="instructor">Instructor</option>
                 </select>
                 <span class="error-text" id="roleError"></span>
+            </div>
+            
+            <!-- Additional fields for instructor registration -->
+            <div id="instructorFields" style="display: none;">
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" rows="3"></textarea>
+                    <span class="error-text" id="bioError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" name="department">
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Business">Business</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="error-text" id="departmentError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="verificationDocument">Verification Document (PDF/DOC/DOCX/JPEG/PNG, max 5MB)</label>
+                    <input type="file" id="verificationDocument" name="verificationDocument" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    <span class="error-text" id="documentError"></span>
+                </div>
             </div>
             <button type="submit" class="btn btn-success">Create Account</button>
         </form>
@@ -66,10 +99,63 @@
     </div>
     
     <script>
+        // Function to toggle instructor-specific fields
+        function toggleInstructorFields() {
+            const role = document.getElementById('role').value;
+            const instructorFields = document.getElementById('instructorFields');
+            const instructorInputs = instructorFields.querySelectorAll('input, textarea, select');
+            
+            if (role === 'instructor') {
+                instructorFields.style.display = 'block';
+                instructorInputs.forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            } else {
+                instructorFields.style.display = 'none';
+                instructorInputs.forEach(input => {
+                    input.removeAttribute('required');
+                });
+            }
+        }
+        
+        // Call on page load in case of form refresh
+        document.addEventListener('DOMContentLoaded', toggleInstructorFields);
+        
+        // File size validation
+        document.getElementById('verificationDocument').addEventListener('change', function(e) {
+            const fileInput = e.target;
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileSize = file.size;
+                const fileType = file.type;
+                const validTypes = ['application/pdf', 'application/msword', 
+                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                  'image/jpeg', 'image/png'];
+                
+                if (!validTypes.includes(fileType)) {
+                    document.getElementById('documentError').textContent = 'Invalid file type. Please upload a PDF, DOC, DOCX, JPEG, or PNG file.';
+                    fileInput.value = '';
+                    return false;
+                }
+                
+                if (fileSize > maxSize) {
+                    document.getElementById('documentError').textContent = 'File size exceeds 5MB limit.';
+                    fileInput.value = '';
+                    return false;
+                }
+                
+                document.getElementById('documentError').textContent = '';
+            }
+        });
         // Add input event listeners for real-time validation
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
             const fields = ['fullName', 'email', 'password', 'confirmPassword'];
+            
+            // Add event listener for role change
+            document.getElementById('role').addEventListener('change', toggleInstructorFields);
             
             // Add input event listeners to all fields
             fields.forEach(field => {
@@ -257,6 +343,16 @@
             errorSpans.forEach(span => span.textContent = '');
             errorInputs.forEach(input => input.classList.remove('error'));
         }
+    </script>
+    <script>
+        // Auto-dismiss alerts after 10 seconds
+        window.setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 10000);
     </script>
     <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
 </body>

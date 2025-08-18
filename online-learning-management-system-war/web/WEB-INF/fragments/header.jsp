@@ -213,6 +213,22 @@
 
     <!-- Right-side items -->
     <ul class="nav-center">
+      <c:set var="currentUser" value="${not empty sessionScope.currentUser ? sessionScope.currentUser : sessionScope.user}" />
+      <c:set var="isAdmin" value="${false}" />
+      <c:forEach items="${currentUser.userRoleList}" var="role">
+          <c:if test="${role.roleId.roleName eq 'administrator'}">
+              <c:set var="isAdmin" value="${true}" />
+          </c:if>
+      </c:forEach>
+      
+      <c:if test="${isAdmin}">
+        <li>
+          <a href="${pageContext.request.contextPath}/admin" ${requestScope.activePage == 'admin-dashboard' ? 'class="active"' : ''}>
+            <i class="fas fa-user-shield me-1"></i> Admin Dashboard
+          </a>
+        </li>
+      </c:if>
+      
       <c:if test="${sessionScope.userHasInstructorRole == true}">
         <li>
           <a href="${pageContext.request.contextPath}/instructor/dashboard" ${requestScope.activePage == 'dashboard' ? 'class="active"' : ''}>

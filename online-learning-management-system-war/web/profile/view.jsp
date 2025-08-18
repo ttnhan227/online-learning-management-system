@@ -162,13 +162,11 @@
                             <span class="badge ${profileUser.isApproved ? 'bg-success' : 'bg-warning'}">
                                 ${profileUser.isApproved ? 'Verified' : 'Pending Verification'}
                             </span>
-                            <c:if test="${not profileUser.isApproved}">
-                                <div class="mt-2">
-                                    <a href="${profileUser.verificationDocument}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-file-earmark-text"></i> View Verification Document
-                                    </a>
-                                </div>
-                            </c:if>
+                            <div class="mt-2">
+                                <a href="${profileUser.verificationDocument}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-file-earmark-text"></i> View Verification Document
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

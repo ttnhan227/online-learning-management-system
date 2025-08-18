@@ -33,19 +33,24 @@
         <div class="auth-container">
         <h2>Login to Your Account</h2>
         
-        <%-- Display error message if login failed --%>
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error-message">
-                <%= request.getAttribute("error") %>
-            </div>
-        <% } %>
-        
-        <%-- Display success message if redirected from registration --%>
-        <% if (request.getAttribute("success") != null) { %>
-            <div class="success-message">
-                <%= request.getAttribute("success") %>
-            </div>
-        <% } %>
+        <%-- Display messages --%>
+        <div class="message-container">
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <%= request.getAttribute("error") %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            
+            <% if (request.getAttribute("success") != null) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <%= request.getAttribute("success") %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+        </div>
         
         <form action="${pageContext.request.contextPath}/auth" method="POST" id="loginForm" novalidate>
             <input type="hidden" name="action" value="Login">
@@ -68,7 +73,19 @@
         </div>
     </main>
     <jsp:include page="/WEB-INF/fragments/footer.jsp"/>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
+        // Auto-dismiss alerts after 10 seconds
+        window.setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 10000);
+        
         // Client-side validation for login form
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const email = document.getElementById('email').value.trim();

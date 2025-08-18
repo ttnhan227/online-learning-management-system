@@ -3,16 +3,31 @@ package controllers;
 import beans.AuthenticationSBLocal;
 import entities.AppUser;
 import jakarta.ejb.EJB;
-import java.util.List;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 import utils.ValidationUtils;
 import utils.ValidationResult;
 
+import jakarta.servlet.annotation.WebServlet;
+
+@WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,  // 1MB
+    maxFileSize = 1024 * 1024 * 5,    // 5MB
+    maxRequestSize = 1024 * 1024 * 10 // 10MB
+)
 public class AuthServlet extends HttpServlet {
     
     @EJB
@@ -129,30 +144,105 @@ public class AuthServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         String role = request.getParameter("role");
+        String bio = request.getParameter("bio");
+        String department = request.getParameter("department");
         
-        // Comprehensive validation
-        ValidationResult validationResult = ValidationUtils.validateRegistration(fullName, email, password, confirmPassword);
-        if (!validationResult.isValid()) {
-            request.setAttribute("error", validationResult.getMessage());
-            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
-            return;
-        }
+        // Client-side validation
+        ValidationResult validationResult = ValidationUtils.validateRegistration(
+                fullName, email, password, confirmPassword);
         
-        // Validate role selection
+        // Validate role separately
         if (role == null || role.trim().isEmpty()) {
             request.setAttribute("error", "Please select a role");
             request.getRequestDispatcher("auth/register.jsp").forward(request, response);
             return;
         }
         
-        AppUser newUser = authBean.registerUser(fullName, email, password, role);
-        if (newUser != null) {
-            request.setAttribute("success", "Registration successful! You can now login with your new account.");
-            request.getRequestDispatcher("auth/login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Registration failed. The email address may already be in use. Please try a different email.");
+        if (!validationResult.isValid()) {
+            request.setAttribute("error", validationResult.getMessage());
             request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+            return;
         }
+        
+        // Handle file upload for verification document
+        Part filePart = request.getPart("verificationDocument");
+        
+        // Process file upload
+        String fileName = filePart.getSubmittedFileName();
+        String uploadPath = getServletContext().getRealPath("");
+        File uploadDir = new File(uploadPath + File.separator + "uploads" + File.separator + "verification");
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        
+        // Generate unique filename
+        String fileExtension = "";
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            fileExtension = fileName.substring(i);
+        }
+        String uniqueFileName = "verif_" + System.currentTimeMillis() + "_" + email.hashCode() + fileExtension;
+        String filePath = uploadDir + File.separator + uniqueFileName;
+        
+        try (InputStream fileContent = filePart.getInputStream()) {
+            Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error uploading verification document: " + e.getMessage());
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+            return;
+        }
+        
+        // Store the relative path in the database
+        String relativeFilePath = "uploads/verification/" + uniqueFileName;
+        
+        // Check if email already exists
+        if (authBean.getUserByEmail(email) != null) {
+            request.setAttribute("error", "Email already registered. Please use a different email or login.");
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+            return;
+        }
+        
+        // Register the user
+        AppUser newUser;
+        if ("instructor".equalsIgnoreCase(role)) {
+            // Validate instructor-specific fields
+            if (bio == null || bio.trim().isEmpty()) {
+                request.setAttribute("error", "Bio is required for instructor registration");
+                request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+                return;
+            }
+            if (department == null || department.trim().isEmpty()) {
+                request.setAttribute("error", "Department is required for instructor registration");
+                request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+                return;
+            }
+            
+            // Register the instructor with additional fields
+            newUser = authBean.registerInstructor(fullName, email, password, role, 
+                    bio, department, relativeFilePath);
+        } else {
+            // Register the student
+            newUser = authBean.registerUser(fullName, email, password, role);
+        }
+        
+        if (newUser != null) {
+            String successMessage;
+            if ("instructor".equalsIgnoreCase(role)) {
+                successMessage = "Thank you for registering as an instructor! Your application is currently under review by our admin team. "
+                    + "We will verify your credentials and documents. You will receive an email notification once your account is approved. "
+                    + "This process typically takes 1-2 business days. We appreciate your patience.";
+            } else {
+                successMessage = "Registration successful! Please login with your credentials to access your student dashboard.";
+            }
+            // Forward to login page with success message
+            request.setAttribute("success", successMessage);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+            return;
+        }
+        
+        // If we get here, something went wrong
+        request.setAttribute("error", "Registration failed. Please try again.");
+        request.getRequestDispatcher("auth/register.jsp").forward(request, response);
     }
     
     private void handleLogout(HttpServletRequest request, HttpServletResponse response)

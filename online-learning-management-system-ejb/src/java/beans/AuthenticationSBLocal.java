@@ -26,6 +26,27 @@ public interface AuthenticationSBLocal {
     AppUser registerUser(String fullName, String email, String password, String roleName);
     
     /**
+     * Registers a new instructor with additional instructor-specific fields
+     * @param fullName Instructor's full name
+     * @param email Instructor's email (must be unique)
+     * @param password Instructor's password (will be hashed)
+     * @param roleName Role should be "Instructor"
+     * @param bio Instructor's bio
+     * @param department Instructor's department
+     * @param verificationDocumentPath Path to the uploaded verification document
+     * @return The created AppUser object if successful, null otherwise
+     */
+    AppUser registerInstructor(String fullName, String email, String password, String roleName, 
+                             String bio, String department, String verificationDocumentPath);
+    
+    /**
+     * Gets a user by email
+     * @param email The email to search for
+     * @return The AppUser if found, null otherwise
+     */
+    AppUser getUserByEmail(String email);
+    
+    /**
      * Authenticates a user with email and password
      * @param email User's email
      * @param password User's password

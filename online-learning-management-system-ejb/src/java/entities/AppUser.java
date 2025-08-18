@@ -70,6 +70,9 @@ public class AppUser implements Serializable {
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    
+    @OneToMany(mappedBy = "userId")
+    private List<UserRole> userRoleList;
     // User roles are managed through the UserRole entity
     // Temporarily commented out to fix circular reference issue
     // @OneToMany(mappedBy = "instructorId")
@@ -171,6 +174,14 @@ public class AppUser implements Serializable {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+    
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+    
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
     }
 
     // User roles are managed through the UserRole entity

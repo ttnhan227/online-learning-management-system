@@ -35,6 +35,10 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>controllers.AdminServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ProfileServlet</servlet-name>
         <servlet-class>controllers.ProfileServlet</servlet-class>
     </servlet>
@@ -82,4 +86,35 @@
         <servlet-name>ProfileServlet</servlet-name>
         <url-pattern>/profile/change-password</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/users/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/instructors</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/students</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Security is handled in AdminServlet and AuthServlet -->
 </web-app>
