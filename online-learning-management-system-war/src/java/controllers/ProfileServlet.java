@@ -18,6 +18,8 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -42,6 +44,8 @@ public class ProfileServlet extends HttpServlet {
     private EnrollmentSBLocal enrollmentBean;
     
     private static final String UPLOAD_DIR = "uploads";
+    private static final String UPLOAD_DIR_ABSOLUTE = System.getProperty("catalina.base") + File.separator + "webapps" + File.separator + "online-learning-management-system-war" + File.separator + "uploads";
+    private static final String POLLINATIONS_API = "https://image.pollinations.ai";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -181,11 +185,161 @@ public class ProfileServlet extends HttpServlet {
         } else if ("/profile/change-password".equals(servletPath)) {
             // Handle password change
             changePassword(request, response);
+        } else if ("/profile/generate-image".equals(servletPath)) {
+            // Handle AI image generation
+            generateProfileImage(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
+    private boolean testPollinationsApi() {
+        try {
+            java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder()
+                .connectTimeout(java.time.Duration.ofSeconds(10))
+                .build();
+                
+            java.net.http.HttpRequest testRequest = java.net.http.HttpRequest.newBuilder()
+                .uri(java.net.URI.create(POLLINATIONS_API + "/ping"))
+                .timeout(java.time.Duration.ofSeconds(10))
+                .GET()
+                .build();
+                
+            System.out.println("Testing connection to " + POLLINATIONS_API + "...");
+            java.net.http.HttpResponse<String> testResponse = client.send(
+                testRequest,
+                java.net.http.HttpResponse.BodyHandlers.ofString()
+            );
+            
+            System.out.println("API Test Response: " + testResponse.statusCode() + " - " + testResponse.body());
+            return testResponse.statusCode() == 200;
+        } catch (Exception e) {
+            System.err.println("API Connection Test Failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    private void generateProfileImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        
+        try {
+            String prompt = request.getParameter("prompt");
+            if (prompt == null || prompt.trim().isEmpty()) {
+                out.print("{\"error\": \"Prompt is required\"}");
+                return;
+            }
+            
+            // Add some context to the prompt for better profile pictures
+            // First test the API connection
+            if (!testPollinationsApi()) {
+                out.print("{\"error\": \"Unable to connect to image generation service. Please try again later.\"}");
+                return;
+            }
+            
+            String enhancedPrompt = "professional profile picture, " + prompt + ", high quality, portrait, studio lighting";
+            String apiUrl = POLLINATIONS_API + "/prompt/" + java.net.URLEncoder.encode(enhancedPrompt, "UTF-8") + "?nologo=true";
+            
+            System.out.println("Generating image with prompt: " + enhancedPrompt);
+            System.out.println("API URL: " + apiUrl);
+            
+            // Call Pollinations.ai API
+            java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder()
+                .connectTimeout(java.time.Duration.ofSeconds(30))
+                .build();
+                
+            java.net.http.HttpRequest httpRequest = java.net.http.HttpRequest.newBuilder()
+                    .uri(java.net.URI.create(apiUrl))
+                    .timeout(java.time.Duration.ofSeconds(30))
+                    .GET()
+                    .build();
+            
+            System.out.println("Sending request to Pollinations.ai...");
+            java.net.http.HttpResponse<InputStream> httpResponse = client.send(
+                httpRequest, 
+                java.net.http.HttpResponse.BodyHandlers.ofInputStream()
+            );
+            
+            System.out.println("Response status code: " + httpResponse.statusCode());
+            System.out.println("Response headers: " + httpResponse.headers().map());
+            
+            if (httpResponse.statusCode() == 200) {
+                // Create uploads directories if they don't exist
+                String relativeUploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+                File relativeUploadDir = new File(relativeUploadPath);
+                File absoluteUploadDir = new File(UPLOAD_DIR_ABSOLUTE);
+                
+                // Log directory info
+                System.out.println("Relative upload path: " + relativeUploadPath);
+                System.out.println("Absolute upload path: " + UPLOAD_DIR_ABSOLUTE);
+                
+                // Create directories if they don't exist
+                if (!relativeUploadDir.exists()) {
+                    System.out.println("Creating relative upload directory: " + relativeUploadPath);
+                    if (!relativeUploadDir.mkdirs()) {
+                        System.err.println("Failed to create relative upload directory: " + relativeUploadPath);
+                    }
+                }
+                
+                if (!absoluteUploadDir.exists()) {
+                    System.out.println("Creating absolute upload directory: " + UPLOAD_DIR_ABSOLUTE);
+                    if (!absoluteUploadDir.mkdirs()) {
+                        System.err.println("Failed to create absolute upload directory: " + UPLOAD_DIR_ABSOLUTE);
+                    }
+                }
+                
+                // Check write permissions
+                System.out.println("Can write to relative dir: " + relativeUploadDir.canWrite());
+                System.out.println("Can write to absolute dir: " + absoluteUploadDir.canWrite());
+                
+                // Use the absolute path for file operations
+                String uploadPath = UPLOAD_DIR_ABSOLUTE;
+                
+                // Generate a unique filename
+                String fileName = "generated_" + System.currentTimeMillis() + ".png";
+                String filePath = uploadPath + File.separator + fileName;
+                
+                // Save the image
+                try (InputStream is = httpResponse.body();
+                     FileOutputStream fos = new FileOutputStream(filePath)) {
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                }
+                
+                // Return the URL to the generated image
+                String imageUrl = request.getContextPath() + "/" + UPLOAD_DIR + "/" + fileName;
+                out.print("{\"imageUrl\": \"" + imageUrl + "\"}");
+            } else {
+                // Try to read error response body
+                String errorBody = "";
+                try (InputStream is = httpResponse.body()) {
+                    errorBody = new String(is.readAllBytes());
+                    System.out.println("Error response body: " + errorBody);
+                } catch (Exception e) {
+                    System.out.println("Could not read error response body: " + e.getMessage());
+                }
+                
+                String errorMsg = "Failed to generate image. Status: " + httpResponse.statusCode();
+                if (!errorBody.isEmpty()) {
+                    errorMsg += " - " + errorBody;
+                }
+                out.print("{\"error\": \"" + errorMsg + "\"}");
+            }
+        } catch (Exception e) {
+            System.err.println("Error in generateProfileImage: ");
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            if (e.getCause() != null) {
+                errorMsg += " (Cause: " + e.getCause().getMessage() + ")";
+            }
+            out.print("{\"error\": \"Error generating image: " + errorMsg + "\"}");
+        }
+    }
+    
     private boolean isInstructor(AppUser user) {
         if (user == null) return false;
         

@@ -64,11 +64,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link ${activePage eq 'admin-students' ? 'active' : ''}" href="${pageContext.request.contextPath}/admin/students">
-                    <i class="fas fa-user-graduate"></i> Students
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin/courses">
                     <i class="fas fa-book"></i> Courses
                 </a>
@@ -87,8 +82,8 @@
         <hr class="border-secondary">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                <a class="nav-link" href="${pageContext.request.contextPath}/HomeServlet">
+                    <i class="fas fa-sign-out-alt"></i> Back to Home
                 </a>
             </li>
         </ul>

@@ -100,7 +100,7 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
         // Get counts for dashboard
         List<AppUser> users = adminSB.getAllUsers();
-        List<AppUser> instructors = adminSB.getUsersByRole("INSTRUCTOR");
+        List<AppUser> allInstructors = adminSB.getUsersByRole("INSTRUCTOR");
         List<AppUser> students = adminSB.getUsersByRole("STUDENT");
         
         // Get recent users (last 5)
@@ -109,16 +109,17 @@ public class AdminServlet extends HttpServlet {
                 .limit(5)
                 .collect(Collectors.toList());
         
-        long pendingInstructors = instructors.stream()
+        // Get pending instructors
+        List<AppUser> pendingInstructorsList = allInstructors.stream()
                 .filter(i -> !i.getIsApproved())
-                .count();
+                .collect(Collectors.toList());
         
         request.setAttribute("userCount", users.size());
-        request.setAttribute("instructorCount", instructors.size());
+        request.setAttribute("instructorCount", allInstructors.size());
         request.setAttribute("studentCount", students.size());
-        request.setAttribute("pendingInstructorCount", pendingInstructors);
+        request.setAttribute("pendingInstructorCount", pendingInstructorsList.size());
         request.setAttribute("recentUsers", recentUsers);
-        request.setAttribute("instructors", instructors);
+        request.setAttribute("instructors", pendingInstructorsList);
         
         request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
     }

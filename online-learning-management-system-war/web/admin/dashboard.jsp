@@ -153,26 +153,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${instructors}" var="instructor" end="4">
-                                                <c:if test="${!instructor.isApproved}">
+                                            <c:choose>
+                                                <c:when test="${not empty instructors}">
+                                                    <c:forEach items="${instructors}" var="instructor" end="4">
+                                                        <tr>
+                                                            <td>${instructor.fullName}</td>
+                                                            <td>${instructor.email}</td>
+                                                            <td>
+                                                                <a href="${pageContext.request.contextPath}/admin/users/approve?id=${instructor.userId}" 
+                                                                   class="btn btn-sm btn-success" 
+                                                                   onclick="return confirm('Approve this instructor?')">
+                                                                    <i class="fas fa-check"></i> Approve
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
                                                     <tr>
-                                                        <td>${instructor.fullName}</td>
-                                                        <td>${instructor.email}</td>
-                                                        <td>
-                                                            <a href="${pageContext.request.contextPath}/admin/users/approve?id=${instructor.userId}" 
-                                                               class="btn btn-sm btn-success" 
-                                                               onclick="return confirm('Approve this instructor?')">
-                                                                <i class="fas fa-check"></i> Approve
-                                                            </a>
-                                                        </td>
+                                                        <td colspan="3" class="text-center text-muted py-3">No pending approvals</td>
                                                     </tr>
-                                                </c:if>
-                                            </c:forEach>
-                                            <c:if test="${empty instructors || instructors.stream().noneMatch(i -> !i.isApproved)}">
-                                                <tr>
-                                                    <td colspan="3" class="text-center text-muted py-3">No pending approvals</td>
-                                                </tr>
-                                            </c:if>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </tbody>
                                     </table>
                                 </div>
